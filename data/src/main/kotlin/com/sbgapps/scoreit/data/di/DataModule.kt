@@ -24,6 +24,7 @@ import com.sbgapps.scoreit.data.model.Player
 import com.sbgapps.scoreit.data.solver.BeloteSolver
 import com.sbgapps.scoreit.data.solver.CoincheSolver
 import com.sbgapps.scoreit.data.solver.TarotSolver
+import com.sbgapps.scoreit.data.solver.CactusSolver
 import com.sbgapps.scoreit.data.solver.UniversalSolver
 import com.sbgapps.scoreit.data.source.DataStore
 import org.koin.android.ext.koin.androidContext
@@ -33,11 +34,12 @@ val dataModule = module {
 
     single { DataStore(get(), get(), Player(androidContext().getString(R.string.universal_total_points), Color.RED)) }
 
-    single { GameUseCase(get(), get(), get(), get(), get()) }
+    single { GameUseCase(get(), get(), get(), get(), get(), get()) }
     single { ScoreBoardUseCase(get()) }
 
     single { UniversalSolver() }
     single { TarotSolver() }
     single { BeloteSolver(get()) }
     single { CoincheSolver(get()) }
+    single { CactusSolver() }
 }

@@ -23,5 +23,6 @@ enum class GameType {
     UNIVERSAL,
     TAROT,
     BELOTE,
-    COINCHE
+    COINCHE,
+    CACTUS
 }

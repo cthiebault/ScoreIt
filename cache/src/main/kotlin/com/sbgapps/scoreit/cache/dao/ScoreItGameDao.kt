@@ -28,6 +28,7 @@ import com.sbgapps.scoreit.data.model.GameType
 import com.sbgapps.scoreit.data.model.Player
 import com.sbgapps.scoreit.data.model.ScoreBoard
 import com.sbgapps.scoreit.data.model.TarotGame
+import com.sbgapps.scoreit.data.model.CactusGame
 import com.sbgapps.scoreit.data.model.UniversalGame
 import com.squareup.moshi.Moshi
 
@@ -72,6 +73,7 @@ class ScoreItGameDao(
             GameType.TAROT -> TarotGame(players)
             GameType.BELOTE -> BeloteGame(players)
             GameType.COINCHE -> CoincheGame(players)
+            GameType.CACTUS -> CactusGame(players)
         }
         return createGame(newGame, playerCount, fileName)
     }
@@ -84,6 +86,7 @@ class ScoreItGameDao(
             is TarotGame -> currentGame.copy(laps = emptyList())
             is BeloteGame -> currentGame.copy(laps = emptyList())
             is CoincheGame -> currentGame.copy(laps = emptyList())
+            is CactusGame -> currentGame.copy(laps = emptyList())
         }
     }
 
@@ -108,6 +111,7 @@ class ScoreItGameDao(
         GameType.TAROT -> "${TAROT_KEY}_${playerCount}"
         GameType.BELOTE -> BELOTE_KEY
         GameType.COINCHE -> COINCHE_KEY
+        GameType.CACTUS -> "${CACTUS_KEY}_${playerCount}"
     }
 
     private fun getDirectory(gameType: GameType, playerCount: Int): String {
@@ -116,6 +120,7 @@ class ScoreItGameDao(
             GameType.TAROT -> "$TAROT_PATH/${playerCount}"
             GameType.BELOTE -> BELOTE_PATH
             GameType.COINCHE -> COINCHE_PATH
+            GameType.CACTUS -> "$CACTUS_PATH/${playerCount}"
         }
         storage.createDirectory(directory)
         return directory
@@ -201,6 +206,8 @@ class ScoreItGameDao(
         private const val BELOTE_KEY = "belote_key"
         private const val COINCHE_PATH = "coinche/v2"
         private const val COINCHE_KEY = "coinche_key"
+        private const val CACTUS_PATH = "cactus/v2"
+        private const val CACTUS_KEY = "cactus_key"
         private const val SCOREBOARD_PATH = "scoreboard/v1"
         private const val SCOREBOARD_FILENAME = "data"
     }

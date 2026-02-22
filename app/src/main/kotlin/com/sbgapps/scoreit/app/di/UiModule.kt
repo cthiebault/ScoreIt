@@ -21,6 +21,7 @@ import com.sbgapps.scoreit.app.ui.chart.ChartViewModel
 import com.sbgapps.scoreit.app.ui.edition.belote.BeloteEditionViewModel
 import com.sbgapps.scoreit.app.ui.edition.coinche.CoincheEditionViewModel
 import com.sbgapps.scoreit.app.ui.edition.tarot.TarotEditionViewModel
+import com.sbgapps.scoreit.app.ui.edition.cactus.CactusEditionViewModel
 import com.sbgapps.scoreit.app.ui.edition.universal.UniversalEditionViewModel
 import com.sbgapps.scoreit.app.ui.prefs.PreferencesViewModel
 import com.sbgapps.scoreit.app.ui.saved.SavedGameViewModel
@@ -34,6 +35,7 @@ val uiModule = module {
     viewModel { ChartViewModel(get()) }
     viewModel { PreferencesViewModel(get()) }
     viewModel { UniversalEditionViewModel(get()) }
+    viewModel { CactusEditionViewModel(get()) }
     viewModel { TarotEditionViewModel(get(), get()) }
     viewModel { BeloteEditionViewModel(get(), get()) }
     viewModel { CoincheEditionViewModel(get(), get()) }

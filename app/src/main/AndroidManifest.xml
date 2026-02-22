@@ -64,6 +64,10 @@
             android:label="@string/title_game_coinche"
             />
         <activity
+            android:name=".app.ui.edition.cactus.CactusEditionActivity"
+            android:label="@string/title_game_cactus"
+            />
+        <activity
             android:name=".app.ui.AboutActivity"
             android:label="@string/title_activity_about"
             />

@@ -47,3 +47,9 @@ data class CoincheGame(
     override val players: List<Player>,
     override val laps: List<CoincheLap> = emptyList()
 ) : Game(GameType.COINCHE, players, laps)
+
+@JsonClass(generateAdapter = true)
+data class CactusGame(
+    override val players: List<Player>,
+    override val laps: List<CactusLap> = emptyList()
+) : Game(GameType.CACTUS, players, laps)

@@ -33,7 +33,10 @@ import com.sbgapps.scoreit.data.model.TarotGame
 import com.sbgapps.scoreit.data.model.TarotLap
 import com.sbgapps.scoreit.data.model.UniversalGame
 import com.sbgapps.scoreit.data.model.UniversalLap
+import com.sbgapps.scoreit.data.model.CactusGame
+import com.sbgapps.scoreit.data.model.CactusLap
 import com.sbgapps.scoreit.data.solver.BeloteSolver
+import com.sbgapps.scoreit.data.solver.CactusSolver
 import com.sbgapps.scoreit.data.solver.CoincheSolver
 import com.sbgapps.scoreit.data.solver.TarotSolver
 import com.sbgapps.scoreit.data.solver.UniversalSolver
@@ -44,7 +47,8 @@ class GameUseCase(
     private val universalSolver: UniversalSolver,
     private val tarotSolver: TarotSolver,
     private val beloteSolver: BeloteSolver,
-    private val coincheSolver: CoincheSolver
+    private val coincheSolver: CoincheSolver,
+    private val cactusSolver: CactusSolver
 ) {
 
     private var editionState: EditionState? = null
@@ -70,6 +74,7 @@ class GameUseCase(
         is TarotLap -> tarotSolver.getResults(lap)
         is BeloteLap -> beloteSolver.getResults(lap).first
         is CoincheLap -> coincheSolver.getResults(lap).first
+        is CactusLap -> cactusSolver.getResults(lap)
     }
 
     fun getDisplayResults(lap: Lap): Pair<List<String>, Boolean> = when (lap) {
@@ -77,6 +82,7 @@ class GameUseCase(
         is TarotLap -> tarotSolver.getDisplayResults(lap)
         is BeloteLap -> beloteSolver.getDisplayResults(lap)
         is CoincheLap -> coincheSolver.getDisplayResults(lap)
+        is CactusLap -> error("Not needed for this game")
     }
 
     fun getScores(): List<Int> = when (val game = getGame()) {
@@ -88,6 +94,7 @@ class GameUseCase(
         is BeloteGame -> beloteSolver.computeScores(game.laps)
         is CoincheGame -> coincheSolver.computeScores(game.laps)
         is TarotGame -> tarotSolver.computeScores(game.laps, getPlayers().size)
+        is CactusGame -> cactusSolver.computeScores(game.laps, getPlayers().size)
     }
 
     fun isGameStarted(): Boolean = getGame().laps.isNotEmpty()
@@ -114,6 +121,7 @@ class GameUseCase(
             is TarotGame -> TarotGame(players, game.laps)
             is BeloteGame -> BeloteGame(players, game.laps)
             is CoincheGame -> CoincheGame(players, game.laps)
+            is CactusGame -> CactusGame(players, game.laps)
         }
         dataStore.saveGame(editedGame)
     }
@@ -125,6 +133,7 @@ class GameUseCase(
                 is TarotGame -> TarotLap(game.players.size)
                 is BeloteGame -> BeloteLap()
                 is CoincheGame -> CoincheLap()
+                is CactusGame -> CactusLap(game.players.size)
             }
             editionState = EditionState.Creation(lap)
             lap
@@ -149,6 +158,7 @@ class GameUseCase(
                     is TarotGame -> TarotGame(game.players, actualAddLap(game, state))
                     is BeloteGame -> BeloteGame(game.players, actualAddLap(game, state))
                     is CoincheGame -> CoincheGame(game.players, actualAddLap(game, state))
+                    is CactusGame -> CactusGame(game.players, actualAddLap(game, state))
                 }
             }
             is EditionState.Modification -> {
@@ -157,6 +167,7 @@ class GameUseCase(
                     is TarotGame -> TarotGame(game.players, actualEditLap(game, state))
                     is BeloteGame -> BeloteGame(game.players, actualEditLap(game, state))
                     is CoincheGame -> CoincheGame(game.players, actualEditLap(game, state))
+                    is CactusGame -> CactusGame(game.players, actualEditLap(game, state))
                 }
             }
             else -> error("Unknown state")
@@ -186,6 +197,7 @@ class GameUseCase(
             is TarotGame -> TarotGame(game.players, emptyList())
             is BeloteGame -> BeloteGame(game.players, emptyList())
             is CoincheGame -> CoincheGame(game.players, emptyList())
+            is CactusGame -> CactusGame(game.players, emptyList())
         }
         editionState = null
         dataStore.saveGame(newGame)
@@ -207,6 +219,7 @@ class GameUseCase(
             is TarotGame -> TarotGame(game.players, actualDeleteLap(game, position))
             is BeloteGame -> BeloteGame(game.players, actualDeleteLap(game, position))
             is CoincheGame -> CoincheGame(game.players, actualDeleteLap(game, position))
+            is CactusGame -> CactusGame(game.players, actualDeleteLap(game, position))
         }
         dataStore.saveGame(game)
     }
@@ -219,7 +232,7 @@ class GameUseCase(
 
     fun canEditPlayer(position: Int): Boolean = when (getGame()) {
         is UniversalGame -> if (dataStore.isUniversalTotalDisplayed()) position != getPlayers().size else true
-        else -> true
+        is TarotGame, is BeloteGame, is CoincheGame, is CactusGame -> true
     }
 
     fun getSavedFiles(): List<SavedGameInfo> = dataStore.getSavedFiles()
@@ -238,14 +251,31 @@ class GameUseCase(
 
     fun getMarkers(): List<Boolean> {
         val players = getPlayers()
-        val modulo = getGame().laps.size % players.size
+        val game = getGame()
+        val modulo = game.laps.size % players.size
         val markers = players.mapIndexed { index, _ ->
-            if (getGame() is UniversalGame || getGame() is TarotGame) index == modulo else false
+            if (game is UniversalGame || game is TarotGame || game is CactusGame) index == modulo else false
         }
-        return if (getGame() is UniversalGame && dataStore.isUniversalTotalDisplayed()) {
+        return if (game is UniversalGame && dataStore.isUniversalTotalDisplayed()) {
             markers.toMutableList().apply { add(false) }
         } else {
             markers
+        }
+    }
+
+    fun getProgressiveScores(): List<List<Int>> = when (val game = getGame()) {
+        is CactusGame -> cactusSolver.computeProgressiveScores(game.laps, getPlayers().size)
+        else -> {
+            val progressive = mutableListOf<List<Int>>()
+            game.laps.forEachIndexed { index, lap ->
+                val results = getResults(lap)
+                progressive += if (index == 0) {
+                    results
+                } else {
+                    results.zip(progressive[index - 1]) { current, previous -> previous + current }
+                }
+            }
+            progressive
         }
     }
 }

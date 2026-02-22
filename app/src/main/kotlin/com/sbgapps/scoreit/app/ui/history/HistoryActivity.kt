@@ -98,6 +98,7 @@ import com.sbgapps.scoreit.app.model.DonationRow
 import com.sbgapps.scoreit.app.model.Header
 import com.sbgapps.scoreit.app.model.LapRow
 import com.sbgapps.scoreit.app.model.TarotLapRow
+import com.sbgapps.scoreit.app.model.CactusLapRow
 import com.sbgapps.scoreit.app.model.UniversalLapRow
 import com.sbgapps.scoreit.app.ui.AboutActivity
 import com.sbgapps.scoreit.app.ui.Content
@@ -108,6 +109,7 @@ import com.sbgapps.scoreit.app.ui.chart.ChartViewModel
 import com.sbgapps.scoreit.app.ui.edition.belote.BeloteEditionActivity
 import com.sbgapps.scoreit.app.ui.edition.coinche.CoincheEditionActivity
 import com.sbgapps.scoreit.app.ui.edition.tarot.TarotEditionActivity
+import com.sbgapps.scoreit.app.ui.edition.cactus.CactusEditionActivity
 import com.sbgapps.scoreit.app.ui.edition.universal.UniversalEditionActivity
 import com.sbgapps.scoreit.app.ui.prefs.PreferencesActivity
 import com.sbgapps.scoreit.app.ui.prefs.PreferencesViewModel
@@ -171,6 +173,7 @@ class HistoryActivity : ComponentActivity() {
             GameType.TAROT -> start<TarotEditionActivity>(bundle)
             GameType.BELOTE -> start<BeloteEditionActivity>(bundle)
             GameType.COINCHE -> start<CoincheEditionActivity>(bundle)
+            GameType.CACTUS -> start<CactusEditionActivity>(bundle)
         }
     }
 
@@ -671,6 +674,26 @@ private fun LapRowContent(lap: LapRow, onClick: () -> Unit) {
             }
         }
 
+        is CactusLapRow -> {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = onClick)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                lap.results.forEach { result ->
+                    Text(
+                        text = result.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+
         is TarotLapRow -> {
             Column(
                 modifier = Modifier
@@ -756,6 +779,14 @@ private fun NavDrawerSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onSelectGame(GameType.UNIVERSAL) }
+                    .padding(horizontal = 24.dp, vertical = 12.dp)
+            )
+            Text(
+                text = stringResource(R.string.drawer_game_cactus),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onSelectGame(GameType.CACTUS) }
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             )
             Text(

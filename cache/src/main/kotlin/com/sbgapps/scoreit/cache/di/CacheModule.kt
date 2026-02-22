@@ -28,6 +28,7 @@ import com.sbgapps.scoreit.data.model.CoincheGame
 import com.sbgapps.scoreit.data.model.Game
 import com.sbgapps.scoreit.data.model.GameType
 import com.sbgapps.scoreit.data.model.TarotGame
+import com.sbgapps.scoreit.data.model.CactusGame
 import com.sbgapps.scoreit.data.model.UniversalGame
 import com.sbgapps.scoreit.data.repository.BillingRepo
 import com.sbgapps.scoreit.data.repository.CacheRepo
@@ -66,6 +67,7 @@ private fun createMoshi(): Moshi = Moshi.Builder()
             .withSubtype(TarotGame::class.java, GameType.TAROT.name)
             .withSubtype(BeloteGame::class.java, GameType.BELOTE.name)
             .withSubtype(CoincheGame::class.java, GameType.COINCHE.name)
+            .withSubtype(CactusGame::class.java, GameType.CACTUS.name)
     )
     .add(KotlinJsonAdapterFactory())
     .build()

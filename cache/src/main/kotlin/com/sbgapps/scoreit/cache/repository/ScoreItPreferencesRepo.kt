@@ -37,6 +37,7 @@ class ScoreItPreferencesRepo(private val preferences: SharedPreferences) : Prefe
     override fun getPlayerCount(): Int = when (getGameType()) {
         GameType.UNIVERSAL -> preferences.getInt(USER_PREF_UNIVERSAL_PLAYER_CNT, 5)
         GameType.TAROT -> preferences.getInt(USER_PREF_TAROT_PLAYER_CNT, 5)
+        GameType.CACTUS -> preferences.getInt(USER_PREF_CACTUS_PLAYER_CNT, 5)
         else -> 2
     }
 
@@ -45,6 +46,7 @@ class ScoreItPreferencesRepo(private val preferences: SharedPreferences) : Prefe
             when (getGameType()) {
                 GameType.UNIVERSAL -> putInt(USER_PREF_UNIVERSAL_PLAYER_CNT, max(2, count))
                 GameType.TAROT -> putInt(USER_PREF_TAROT_PLAYER_CNT, max(3, count))
+                GameType.CACTUS -> putInt(USER_PREF_CACTUS_PLAYER_CNT, max(2, count))
                 else -> error("Cannot set player count for this game")
             }
         }
@@ -93,6 +95,7 @@ class ScoreItPreferencesRepo(private val preferences: SharedPreferences) : Prefe
         private const val USER_PREF_UNIVERSAL_TOTAL = "universal_show_total"
         private const val USER_PREF_BELOTE_ROUND = "belote_round_score"
         private const val USER_PREF_COINCHE_ROUND = "coinche_round_score"
+        private const val USER_PREF_CACTUS_PLAYER_CNT = "cactus_player_count"
         private const val USER_PREF_THEME = "preferred_theme"
     }
 }

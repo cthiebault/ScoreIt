@@ -23,6 +23,7 @@ import com.sbgapps.scoreit.app.model.DonationRow
 import com.sbgapps.scoreit.app.model.Header
 import com.sbgapps.scoreit.app.model.LapRow
 import com.sbgapps.scoreit.app.model.TarotLapRow
+import com.sbgapps.scoreit.app.model.CactusLapRow
 import com.sbgapps.scoreit.app.model.UniversalLapRow
 import com.sbgapps.scoreit.core.ui.BaseViewModel
 import com.sbgapps.scoreit.core.ui.Effect
@@ -39,6 +40,7 @@ import com.sbgapps.scoreit.data.model.GameType
 import com.sbgapps.scoreit.data.model.Player
 import com.sbgapps.scoreit.data.model.TarotGame
 import com.sbgapps.scoreit.data.model.TarotLap
+import com.sbgapps.scoreit.data.model.CactusGame
 import com.sbgapps.scoreit.data.model.UniversalGame
 import com.sbgapps.scoreit.data.repository.BillingRepo
 
@@ -152,7 +154,7 @@ class GameViewModel(
     private fun getContent(): Content = Content(getHeader(), getLaps())
 
     fun getPlayerCountOptions(): List<Int> = when (useCase.getGame()) {
-        is UniversalGame -> listOf(2, 3, 4, 5, 6, 7, 8)
+        is UniversalGame, is CactusGame -> listOf(2, 3, 4, 5, 6, 7, 8)
         is TarotGame -> listOf(3, 4, 5)
         else -> error("Not managed for other games")
     }
@@ -160,7 +162,7 @@ class GameViewModel(
     fun getEnabledMenuItems(): Set<MenuItem> {
         val items = mutableSetOf<MenuItem>()
         when (useCase.getGame()) {
-            is UniversalGame, is TarotGame -> items.add(MenuItem.PLAYER_COUNT)
+            is UniversalGame, is TarotGame, is CactusGame -> items.add(MenuItem.PLAYER_COUNT)
             is BeloteGame, is CoincheGame -> {}
         }
         if (useCase.isGameStarted()) {
@@ -198,6 +200,10 @@ class GameViewModel(
             is CoincheGame -> game.laps.mapIndexed { index, lap ->
                 val (displayResults, isWon) = useCase.getDisplayResults(lap)
                 CoincheLapRow(index, displayResults, isWon)
+            }
+
+            is CactusGame -> game.laps.mapIndexed { index, lap ->
+                CactusLapRow(index, useCase.getResults(lap))
             }
         }
         displayedLaps = laps

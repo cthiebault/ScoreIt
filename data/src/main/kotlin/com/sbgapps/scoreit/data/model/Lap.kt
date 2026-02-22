@@ -53,3 +53,8 @@ data class CoincheLap(
     val points: Int = 110,
     val bonuses: List<BeloteBonus> = emptyList()
 ) : Lap()
+
+@JsonClass(generateAdapter = true)
+data class CactusLap(val points: List<Int>) : Lap() {
+    constructor(playerCount: Int) : this(List(playerCount) { 0 })
+}

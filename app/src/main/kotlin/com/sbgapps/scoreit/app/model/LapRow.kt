@@ -44,4 +44,9 @@ data class TarotLapRow(
     val isWon: Boolean
 ) : LapRow(position)
 
+data class CactusLapRow(
+    override val position: Int,
+    val results: List<Int>
+) : LapRow(position)
+
 data object DonationRow : LapRow(0)

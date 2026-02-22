@@ -35,27 +35,14 @@ class ChartViewModel(private val useCase: GameUseCase) : ViewModel() {
     }
 
     private fun getPlayerResults(): List<LineSet> {
-        val lines = mutableListOf<LineSet>()
-        val lapResults = mutableListOf<List<Int>>()
-        useCase.getGame().laps.forEachIndexed { index, lap ->
-            val results = useCase.getResults(lap)
-            lapResults += if (0 == index) {
-                results
-            } else {
-                results.zip(lapResults[index - 1]) { current, previous ->
-                    previous + current
-                }
-            }
-        }
+        val lapResults = useCase.getProgressiveScores()
 
-        useCase.getPlayers().forEachIndexed { playerIndex, player ->
+        return useCase.getPlayers().mapIndexed { playerIndex, player ->
             val points = mutableListOf(LinePoint())
             lapResults.forEachIndexed { lapIndex, results ->
                 points += LinePoint(lapIndex + 1, results[playerIndex])
             }
-            lines += LineSet(points, player.color)
+            LineSet(points, player.color)
         }
-
-        return lines
     }
 }
