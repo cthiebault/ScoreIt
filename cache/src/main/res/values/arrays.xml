@@ -34,13 +34,13 @@
     </array>
 
     <string-array name="player_names" translatable="false">
-        <item translatable="false">Riri</item>
-        <item translatable="false">Fifi</item>
-        <item translatable="false">Loulou</item>
-        <item translatable="false">Toto</item>
-        <item translatable="false">Titi</item>
-        <item translatable="false">Lulu</item>
-        <item translatable="false">Lili</item>
-        <item translatable="false">Tutu</item>
+        <item translatable="false">Rébecca</item>
+        <item translatable="false">Cédric</item>
+        <item translatable="false">Céleste</item>
+        <item translatable="false">Violette</item>
+        <item translatable="false">Aude</item>
+        <item translatable="false">Antonin</item>
+        <item translatable="false">Zélie</item>
+        <item translatable="false">Anatole</item>
     </string-array>
 </resources>
