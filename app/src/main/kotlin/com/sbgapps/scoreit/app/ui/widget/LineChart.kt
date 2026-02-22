@@ -16,137 +16,14 @@
 
 package com.sbgapps.scoreit.app.ui.widget
 
-
-import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
-import android.util.AttributeSet
-import android.view.View
 import androidx.annotation.ColorInt
-import com.sbgapps.scoreit.R
-import com.sbgapps.scoreit.core.ext.colorAttr
-import com.sbgapps.scoreit.core.ext.dip
-
-class LineChart @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    var lines = emptyList<LineSet>()
-        set(value) {
-            maxY = value.maxOfOrNull { it.getMaxY() } ?: 0f
-            minY = value.minOfOrNull { it.getMinY() } ?: 0f
-            maxX = value.maxOfOrNull { it.getMaxX() } ?: 0f
-            minX = value.minOfOrNull { it.getMinX() } ?: 0f
-            field = value
-            postInvalidate()
-        }
-
-    private val axisColor = context.colorAttr(R.attr.colorOnBackground)
-    private val paint = Paint()
-    private val keySize = context.dip(2).toFloat()
-    private val padding = context.dip(32).toFloat()
-
-    private var maxY = 0f
-    private var minY = 0f
-    private var maxX = 0f
-    private var minX = 0f
-
-    init {
-        showEditMode()
-    }
-
-    public override fun onDraw(canvas: Canvas) {
-        val usableHeight = height - 2 * padding
-        val usableWidth = width - 2 * padding
-
-        // Draw x-axis line
-        updatePaint(axisColor, keySize / 2)
-        val height: Float = if (minY < 0) {
-            height.toFloat() - padding - usableHeight * (-minY / (maxY - minY))
-        } else {
-            height - padding
-        }
-
-        canvas.drawLine(
-            padding,
-            height,
-            width - padding,
-            height,
-            paint
-        )
-
-        // Draw lines
-        lines.forEach { line ->
-            var index = 0
-            var lastXPixels = 0f
-            var newYPixels: Float
-            var lastYPixels = 0f
-            var newXPixels: Float
-
-            updatePaint(line.color, keySize)
-            line.points.forEach { point ->
-                val yPercent = (point.y - minY) / (maxY - minY)
-                val xPercent = (point.x - minX) / (maxX - minX)
-                if (index == 0) {
-                    lastXPixels = padding + xPercent * usableWidth
-                    lastYPixels = getHeight().toFloat() - padding - usableHeight * yPercent
-                } else {
-                    newXPixels = padding + xPercent * usableWidth
-                    newYPixels = getHeight().toFloat() - padding - usableHeight * yPercent
-                    canvas.drawLine(lastXPixels, lastYPixels, newXPixels, newYPixels, paint)
-                    lastXPixels = newXPixels
-                    lastYPixels = newYPixels
-                }
-                index++
-            }
-        }
-
-        // Draw points
-        lines.forEach { line ->
-            updatePaint(line.color, keySize)
-            if (line.arePointsDisplayed) {
-                line.points.forEach { point ->
-                    val yPercent = (point.y - minY) / (maxY - minY)
-                    val xPercent = (point.x - minX) / (maxX - minX)
-                    val xPixels = padding + xPercent * usableWidth
-                    val yPixels = getHeight().toFloat() - padding - usableHeight * yPercent
-                    canvas.drawCircle(xPixels, yPixels, 2 * keySize, paint)
-                }
-            }
-        }
-    }
-
-    private fun updatePaint(color: Int, strokeWidth: Float) {
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.strokeWidth = strokeWidth
-        paint.color = color
-    }
-
-    private fun showEditMode() {
-        if (isInEditMode) lines = listOf(
-            LineSet(
-                listOf(
-                    LinePoint(),
-                    LinePoint(1, 2),
-                    LinePoint(2, -1)
-                )
-            )
-        )
-    }
-}
 
 data class LinePoint @JvmOverloads constructor(var x: Float = 0f, var y: Float = 0f) {
 
     constructor(x: Double, y: Double) : this(x.toFloat(), y.toFloat())
 
     constructor(x: Int, y: Int) : this(x.toFloat(), y.toFloat())
-
-    override fun toString(): String = "x=$x, y=$y"
 }
 
 data class LineSet(
@@ -154,9 +31,6 @@ data class LineSet(
     @ColorInt val color: Int = Color.BLACK,
     val arePointsDisplayed: Boolean = true
 ) {
-
-    val size: Int
-        get() = points.size
 
     fun getMinX(): Float = points.minOfOrNull { it.x } ?: 0f
 

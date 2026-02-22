@@ -16,20 +16,22 @@
 
 package com.sbgapps.scoreit.app.ui.chart
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sbgapps.scoreit.app.ui.widget.LinePoint
 import com.sbgapps.scoreit.app.ui.widget.LineSet
 import com.sbgapps.scoreit.data.interactor.GameUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ChartViewModel(private val useCase: GameUseCase) : ViewModel() {
 
-    private val innerState = MutableLiveData<List<LineSet>>()
+    private val innerState = MutableStateFlow<List<LineSet>>(emptyList())
+    val lines: StateFlow<List<LineSet>> = innerState
 
-    fun getLines(): LiveData<List<LineSet>> {
-        innerState.value ?: innerState.postValue(getPlayerResults())
-        return innerState
+    fun loadLines() {
+        if (innerState.value.isEmpty()) {
+            innerState.value = getPlayerResults()
+        }
     }
 
     private fun getPlayerResults(): List<LineSet> {

@@ -17,7 +17,6 @@
 package com.sbgapps.scoreit.app.ui
 
 import androidx.annotation.ColorInt
-import com.sbgapps.scoreit.R
 import com.sbgapps.scoreit.app.model.BeloteLapRow
 import com.sbgapps.scoreit.app.model.CoincheLapRow
 import com.sbgapps.scoreit.app.model.DonationRow
@@ -158,18 +157,18 @@ class GameViewModel(
         else -> error("Not managed for other games")
     }
 
-    fun getEnabledMenuItems(): List<Int> {
-        val items = when (useCase.getGame()) {
-            is UniversalGame -> mutableListOf(R.id.menu_count)
-            is BeloteGame, is CoincheGame -> mutableListOf()
-            is TarotGame -> mutableListOf(R.id.menu_count)
+    fun getEnabledMenuItems(): Set<MenuItem> {
+        val items = mutableSetOf<MenuItem>()
+        when (useCase.getGame()) {
+            is UniversalGame, is TarotGame -> items.add(MenuItem.PLAYER_COUNT)
+            is BeloteGame, is CoincheGame -> {}
         }
         if (useCase.isGameStarted()) {
-            items.add(R.id.menu_chart)
-            items.add(R.id.menu_clear)
+            items.add(MenuItem.CHART)
+            items.add(MenuItem.CLEAR)
         }
         if (useCase.getSavedFiles().isNotEmpty()) {
-            items.add(R.id.menu_save)
+            items.add(MenuItem.SAVED_GAMES)
         }
         return items
     }
@@ -245,3 +244,5 @@ sealed class GameEvent : Effect {
     data class Edition(val gameType: GameType) : GameEvent()
     data class Deletion(val results: List<LapRow>) : GameEvent()
 }
+
+enum class MenuItem { PLAYER_COUNT, CHART, CLEAR, SAVED_GAMES }

@@ -39,14 +39,10 @@ android {
 
 dependencies {
     implementation(libs.coroutines.android)
-    implementation(libs.androidx.appCompat)
     implementation(libs.androidx.coreKtx)
-    implementation(libs.androidx.fragmentKtx)
     implementation(libs.androidx.lifecyleViewmodel)
-    implementation(libs.material)
     implementation(libs.koinAndroid)
     implementation(libs.timber)
-    implementation(libs.bundles.androidx.lifecycle)
 
     coreLibraryDesugaring(libs.desugaring)
 }
