@@ -14,43 +14,12 @@
  * limitations under the License.
  */
 
-buildscript {
-
-    repositories {
-        mavenCentral()
-        google()
-    }
-
-    dependencies {
-        classpath(libs.kotlin.gradlePlugin)
-        classpath(libs.android.gradlePlugin)
-    }
-
-}
-
 plugins {
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
-}
-
-allprojects {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-}
-
-subprojects {
-    afterEvaluate {
-        extensions.configure<com.android.build.gradle.BaseExtension> {
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_1_8
-                targetCompatibility = JavaVersion.VERSION_1_8
-            }
-        }
-    }
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 tasks.create<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

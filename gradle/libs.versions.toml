@@ -2,22 +2,22 @@
 # @keep
 minSdk = "21"
 # @keep
-compileSdk = "34"
+compileSdk = "36"
 # @keep
-targetSdk = "34"
+targetSdk = "36"
 
-kotlin = "1.9.10"
-coroutines = "1.7.0"
-moshi = "1.15.0"
-androidx-lifecyle = "2.6.2"
+agp = "9.0.1"
+kotlin = "2.3.0"
+ksp = "2.3.6"
+coroutines = "1.10.2"
+moshi = "1.15.2"
+androidx-lifecyle = "2.8.7"
 
 [libraries]
 # Build
-android-gradlePlugin = "com.android.tools.build:gradle:8.1.1"
-desugaring = "com.android.tools:desugar_jdk_libs:2.0.3"
+desugaring = "com.android.tools:desugar_jdk_libs:2.1.4"
 
 # Kotlin
-kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 # Coroutines
@@ -49,10 +49,7 @@ billingKtx = "com.android.billingclient:billing-ktx:6.0.1"
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 # Koin
-koinAndroidX = "org.koin:koin-androidx-viewmodel:2.1.0"
-
-# Storage
-storage = "com.snatik:storage:2.1.0"
+koinAndroidX = "io.insert-koin:koin-androidx-viewmodel:2.1.6"
 
 # Moshi
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
@@ -63,7 +60,12 @@ moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.re
 junit = "junit:junit:4.13.2"
 
 # Mockk
-mockk = "io.mockk:mockk:1.9"
+mockk = "io.mockk:mockk:1.13.16"
 
 [bundles]
 androidx-lifecycle = ["androidx-lifecycleCommon", "androidx-lifecycleProcess", "androidx-lifecycleLivedataKtx"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

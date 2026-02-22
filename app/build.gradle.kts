@@ -15,8 +15,7 @@
  */
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
 }
 
 val versionMajor = 5
@@ -83,7 +82,13 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         isCoreLibraryDesugaringEnabled = true
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 

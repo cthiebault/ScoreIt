@@ -126,13 +126,13 @@ class TarotEditionActivity : EditionActivity() {
         viewModel.loadContent()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.done -> {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.done) {
             viewModel.completeEdition()
             true
+        } else {
+            super.onOptionsItemSelected(item)
         }
-        else -> super.onOptionsItemSelected(item)
-    }
 
     override fun onBackPressed() {
         viewModel.cancelEdition()
@@ -141,11 +141,9 @@ class TarotEditionActivity : EditionActivity() {
     private val buttonCheckedListener = MaterialButtonToggleGroup.OnButtonCheckedListener { view, _, _ ->
         val oudlers = mutableListOf<TarotOudlerValue>()
         view.checkedButtonIds.forEach {
-            when (it) {
-                R.id.buttonPetit -> oudlers += TarotOudlerValue.PETIT
-                R.id.buttonTwentyOne -> oudlers += TarotOudlerValue.TWENTY_ONE
-                R.id.buttonExcuse -> oudlers += TarotOudlerValue.EXCUSE
-            }
+            if (it == R.id.buttonPetit) oudlers += TarotOudlerValue.PETIT
+            else if (it == R.id.buttonTwentyOne) oudlers += TarotOudlerValue.TWENTY_ONE
+            else if (it == R.id.buttonExcuse) oudlers += TarotOudlerValue.EXCUSE
         }
         viewModel.setOudlers(oudlers)
     }

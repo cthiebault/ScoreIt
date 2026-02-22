@@ -105,13 +105,13 @@ class CoincheEditionActivity : EditionActivity() {
         viewModel.loadContent()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.done -> {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.done) {
             viewModel.completeEdition()
             true
+        } else {
+            super.onOptionsItemSelected(item)
         }
-        else -> super.onOptionsItemSelected(item)
-    }
 
     override fun onBackPressed() {
         viewModel.cancelEdition()
@@ -119,13 +119,10 @@ class CoincheEditionActivity : EditionActivity() {
 
     private val scorerCheckedListener = MaterialButtonToggleGroup.OnButtonCheckedListener { _, checkedId, isChecked ->
         if (isChecked) {
-            viewModel.changeTaker(
-                when (checkedId) {
-                    R.id.buttonTeamOne -> PlayerPosition.ONE
-                    R.id.buttonTeamTwo -> PlayerPosition.TWO
-                    else -> error("Unknown player")
-                }
-            )
+            val position = if (checkedId == R.id.buttonTeamOne) PlayerPosition.ONE
+            else if (checkedId == R.id.buttonTeamTwo) PlayerPosition.TWO
+            else error("Unknown player")
+            viewModel.changeTaker(position)
         }
     }
 

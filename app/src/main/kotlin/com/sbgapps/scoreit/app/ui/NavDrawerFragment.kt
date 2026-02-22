@@ -38,16 +38,14 @@ class NavDrawerFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (view as NavigationView).setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.universal -> viewModel.selectGame(GameType.UNIVERSAL)
-                R.id.scoreboard -> requireContext().start<ScoreboardActivity>()
-                R.id.tarot -> viewModel.selectGame(GameType.TAROT)
-                R.id.belote -> viewModel.selectGame(GameType.BELOTE)
-                R.id.coinche -> viewModel.selectGame(GameType.COINCHE)
-
-                R.id.preferences -> requireContext().start<PreferencesActivity>()
-                R.id.about -> requireContext().start<AboutActivity>()
-            }
+            val itemId = menuItem.itemId
+            if (itemId == R.id.universal) viewModel.selectGame(GameType.UNIVERSAL)
+            else if (itemId == R.id.scoreboard) requireContext().start<ScoreboardActivity>()
+            else if (itemId == R.id.tarot) viewModel.selectGame(GameType.TAROT)
+            else if (itemId == R.id.belote) viewModel.selectGame(GameType.BELOTE)
+            else if (itemId == R.id.coinche) viewModel.selectGame(GameType.COINCHE)
+            else if (itemId == R.id.preferences) requireContext().start<PreferencesActivity>()
+            else if (itemId == R.id.about) requireContext().start<AboutActivity>()
             this@NavDrawerFragment.dismiss()
             true
         }

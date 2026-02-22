@@ -64,7 +64,7 @@ cache). Wired together in `ScoreItApp`.
 
 ## Tech Stack
 
-- Kotlin 1.9, Coroutines 1.7, Gradle 8.3 (Kotlin DSL)
+- Kotlin 2.3, Coroutines 1.10, Gradle 9.3 (Kotlin DSL), AGP 9.0
 - AndroidX (lifecycle, fragment, appcompat), Material Design
 - Koin 2.1 (DI), Moshi 1.15 (JSON, with KSP codegen), Timber (logging)
 - View Binding (no Compose)

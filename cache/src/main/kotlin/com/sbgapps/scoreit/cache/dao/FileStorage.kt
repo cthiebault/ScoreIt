@@ -17,7 +17,7 @@
 package com.sbgapps.scoreit.cache.dao
 
 import android.content.Context
-import com.snatik.storage.Storage
+import java.io.File
 
 interface FileStorage {
     fun loadFile(directoryName: String, fileName: String): String
@@ -30,33 +30,30 @@ interface FileStorage {
 
 class ScoreItFileStorage(context: Context) : FileStorage {
 
-    private val storage: Storage = Storage(context)
-    private val internalDirectory = storage.internalFilesDirectory
+    private val internalDirectory = context.filesDir
 
     override fun loadFile(directoryName: String, fileName: String): String =
-        storage.readTextFile("$internalDirectory/$directoryName/$fileName")
+        File(internalDirectory, "$directoryName/$fileName").readText()
 
     override fun saveFile(directoryName: String, fileName: String, data: String) {
-        storage.createFile("$internalDirectory/$directoryName/$fileName", data)
+        File(internalDirectory, "$directoryName/$fileName").writeText(data)
     }
 
     override fun createDirectory(directoryName: String) {
-        storage.createDirectory("$internalDirectory/$directoryName")
+        File(internalDirectory, directoryName).mkdirs()
     }
 
     override fun getSavedFiles(directoryName: String): List<Pair<String, Long>> =
-        storage.getFiles("$internalDirectory/$directoryName").map {
+        File(internalDirectory, directoryName).listFiles()?.map {
             it.name to it.lastModified()
-        }
+        } ?: emptyList()
 
     override fun removeFile(directoryName: String, fileName: String) {
-        storage.deleteFile("$internalDirectory/$directoryName/$fileName")
+        File(internalDirectory, "$directoryName/$fileName").delete()
     }
 
     override fun renameFile(directoryName: String, oldFileName: String, newFileName: String) {
-        storage.rename(
-            "$internalDirectory/$directoryName/$oldFileName",
-            "$internalDirectory/$directoryName/$newFileName"
-        )
+        val dir = File(internalDirectory, directoryName)
+        File(dir, oldFileName).renameTo(File(dir, newFileName))
     }
 }
