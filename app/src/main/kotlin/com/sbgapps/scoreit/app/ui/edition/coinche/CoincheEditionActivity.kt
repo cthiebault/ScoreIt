@@ -16,149 +16,355 @@
 
 package com.sbgapps.scoreit.app.ui.edition.coinche
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isVisible
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.activity.addCallback
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.sbgapps.scoreit.R
+import com.sbgapps.scoreit.app.ui.edition.BonusRow
 import com.sbgapps.scoreit.app.ui.edition.EditionActivity
-import com.sbgapps.scoreit.app.ui.widget.AdaptableLinearLayoutAdapter
+import com.sbgapps.scoreit.app.ui.edition.PointsStepper
+import com.sbgapps.scoreit.app.ui.theme.ScoreItTheme
 import com.sbgapps.scoreit.core.utils.string.build
 import com.sbgapps.scoreit.data.model.BeloteBonusValue
 import com.sbgapps.scoreit.data.model.CoincheValue
 import com.sbgapps.scoreit.data.model.PlayerPosition
-import com.sbgapps.scoreit.databinding.ActivityEditionCoincheBinding
-import com.sbgapps.scoreit.databinding.ListItemEditionBonusBinding
-import java.text.NumberFormat
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.NumberFormat
 
 class CoincheEditionActivity : EditionActivity() {
 
     private val viewModel by viewModel<CoincheEditionViewModel>()
-    private lateinit var binding: ActivityEditionCoincheBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityEditionCoincheBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setupActionBar(binding.toolbar)
+        onBackPressedDispatcher.addCallback(this) { viewModel.cancelEdition() }
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.cancelEdition()
-            }
-        })
+        setContent {
+            ScoreItTheme {
+                val state by viewModel.states.collectAsState(initial = null)
 
-        viewModel.observeStates(this) { state ->
-            when (state) {
-                is CoincheEditionState.Content -> {
-                    binding.buttonTeamOne.text = state.players[PlayerPosition.ONE.index].name
-                    binding.buttonTeamTwo.text = state.players[PlayerPosition.TWO.index].name
-
-                    binding.lapInfo.text = state.lapInfo.build(this)
-
-                    binding.scorerGroup.removeOnButtonCheckedListener(scorerCheckedListener)
-                    when (state.taker) {
-                        PlayerPosition.ONE -> binding.scorerGroup.check(R.id.buttonTeamOne)
-                        PlayerPosition.TWO -> binding.scorerGroup.check(R.id.buttonTeamTwo)
-                        else -> error("Only two players for Belote")
-                    }
-                    binding.scorerGroup.addOnButtonCheckedListener(scorerCheckedListener)
-
-                    binding.bid.text = NumberFormat.getInstance().format(state.bidPoints)
-                    setupBidButton(binding.bidPlusTen, 10, state.stepBid.canAdd)
-                    setupBidButton(binding.bidMinusTen, -10, state.stepBid.canSubtract)
-
-                    binding.coinche.text = getString(state.coinche.resId)
-                    binding.coinche.setOnClickListener {
-                        MaterialAlertDialogBuilder(this)
-                            .setSingleChoiceItems(
-                                R.array.coinche,
-                                state.coinche.ordinal
-                            ) { dialog, which ->
-                                viewModel.setCoinche(CoincheValue.values()[which])
-                                dialog.dismiss()
-                            }
-                            .show()
-                    }
-
-                    binding.pointsTeamOne.text = state.teamPoints.first
-                    binding.pointsTeamTwo.text = state.teamPoints.second
-                    setupPointsButton(binding.pointsPlusTen, 10, state.stepPointsByTen.canAdd)
-                    setupPointsButton(binding.pointsMinusTen, -10, state.stepPointsByTen.canSubtract)
-                    setupPointsButton(binding.pointsPlusOne, 1, state.stepPointsByOne.canAdd)
-                    setupPointsButton(binding.pointsMinusOne, -1, state.stepPointsByOne.canSubtract)
-
-                    binding.addBonus.isVisible = state.availableBonuses.isNotEmpty()
-                    binding.addBonus.setOnClickListener {
-                        CoincheEditionBonusFragment().show(supportFragmentManager, null)
-                    }
-                    val model = state.selectedBonuses.map { (player, bonus) ->
-                        state.players[player.index].name to bonus
-                    }
-                    binding.bonusContainer.adapter = BonusAdapter(model)
+                when (state) {
+                    is CoincheEditionState.Completed -> finish()
+                    is CoincheEditionState.Content -> CoincheEditionScreen(
+                        content = state as CoincheEditionState.Content,
+                        onBack = { viewModel.cancelEdition() },
+                        onDone = { viewModel.completeEdition() },
+                        onTakerChanged = { viewModel.changeTaker(it) },
+                        onStepBid = { viewModel.stepBid(it) },
+                        onSetCoinche = { viewModel.setCoinche(it) },
+                        onIncrement = { viewModel.incrementScore(it) },
+                        onAddBonus = { viewModel.addBonus(it) },
+                        onRemoveBonus = { viewModel.removeBonus(it) }
+                    )
+                    else -> {}
                 }
-
-                is CoincheEditionState.Completed -> finish()
             }
         }
         viewModel.loadContent()
     }
+}
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        if (item.itemId == R.id.done) {
-            viewModel.completeEdition()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CoincheEditionScreen(
+    content: CoincheEditionState.Content,
+    onBack: () -> Unit,
+    onDone: () -> Unit,
+    onTakerChanged: (PlayerPosition) -> Unit,
+    onStepBid: (Int) -> Unit,
+    onSetCoinche: (CoincheValue) -> Unit,
+    onIncrement: (Int) -> Unit,
+    onAddBonus: (Pair<PlayerPosition, BeloteBonusValue>) -> Unit,
+    onRemoveBonus: (Int) -> Unit,
+) {
+    val context = LocalContext.current
+    var showBonusSheet by remember { mutableStateOf(false) }
+    var showCoincheDialog by remember { mutableStateOf(false) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onDone) {
+                        Icon(Icons.Default.Check, contentDescription = null)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
         }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Taker selection
+            Text(
+                text = stringResource(R.string.belote_header_taker),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                FilterChip(
+                    selected = content.taker == PlayerPosition.ONE,
+                    onClick = { onTakerChanged(PlayerPosition.ONE) },
+                    label = { Text(content.players[PlayerPosition.ONE.index].name) }
+                )
+                FilterChip(
+                    selected = content.taker == PlayerPosition.TWO,
+                    onClick = { onTakerChanged(PlayerPosition.TWO) },
+                    label = { Text(content.players[PlayerPosition.TWO.index].name) }
+                )
+            }
 
-    private val scorerCheckedListener = MaterialButtonToggleGroup.OnButtonCheckedListener { _, checkedId, isChecked ->
-        if (isChecked) {
-            val position = if (checkedId == R.id.buttonTeamOne) PlayerPosition.ONE
-            else if (checkedId == R.id.buttonTeamTwo) PlayerPosition.TWO
-            else error("Unknown player")
-            viewModel.changeTaker(position)
-        }
-    }
+            // Info
+            Text(
+                text = content.lapInfo.build(context),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
 
-    private fun setupBidButton(button: MaterialButton, increment: Int, enabled: Boolean) {
-        button.apply {
-            isEnabled = enabled
-            setOnClickListener {
-                viewModel.stepBid(increment)
+            // Bid
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = stringResource(R.string.coinche_header_bid), style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = NumberFormat.getInstance().format(content.bidPoints),
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = { onStepBid(-10) }, enabled = content.stepBid.canSubtract) { Text("-10") }
+                    Button(onClick = { onStepBid(10) }, enabled = content.stepBid.canAdd) { Text("+10") }
+                }
+            }
+
+            // Coinche value
+            TextButton(
+                onClick = { showCoincheDialog = true },
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
+                Text(stringResource(content.coinche.resId))
+            }
+
+            // Points
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(stringResource(R.string.belote_points_taker), style = MaterialTheme.typography.labelMedium)
+                    Text(content.teamPoints.first, style = MaterialTheme.typography.headlineMedium)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(stringResource(R.string.belote_points_defender), style = MaterialTheme.typography.labelMedium)
+                    Text(content.teamPoints.second, style = MaterialTheme.typography.headlineMedium)
+                }
+            }
+
+            PointsStepper(
+                label = stringResource(R.string.belote_header_points),
+                pointsText = content.teamPoints.first,
+                stepByTen = content.stepPointsByTen,
+                stepByOne = content.stepPointsByOne,
+                onIncrement = onIncrement
+            )
+
+            // Bonuses
+            if (content.availableBonuses.isNotEmpty()) {
+                TextButton(
+                    onClick = { showBonusSheet = true },
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null)
+                    Text(stringResource(R.string.belote_header_bonuses))
+                }
+            }
+
+            content.selectedBonuses.forEachIndexed { index, (player, bonus) ->
+                BonusRow(
+                    text = "${content.players[player.index].name} • ${context.getString(bonus.resId)}",
+                    onRemove = { onRemoveBonus(index) }
+                )
             }
         }
     }
 
-    private fun setupPointsButton(button: MaterialButton, increment: Int, enabled: Boolean) {
-        button.apply {
-            isEnabled = enabled
-            setOnClickListener {
-                viewModel.incrementScore(increment)
+    if (showCoincheDialog) {
+        AlertDialog(
+            onDismissRequest = { showCoincheDialog = false },
+            confirmButton = {},
+            text = {
+                Column {
+                    CoincheValue.entries.forEach { value ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = value == content.coinche,
+                                onClick = {
+                                    onSetCoinche(value)
+                                    showCoincheDialog = false
+                                }
+                            )
+                            Text(stringResource(value.resId))
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    if (showBonusSheet) {
+        CoincheBonusSheet(
+            content = content,
+            onDismiss = { showBonusSheet = false },
+            onAddBonus = { bonus ->
+                onAddBonus(bonus)
+                showBonusSheet = false
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CoincheBonusSheet(
+    content: CoincheEditionState.Content,
+    onDismiss: () -> Unit,
+    onAddBonus: (Pair<PlayerPosition, BeloteBonusValue>) -> Unit,
+) {
+    val context = LocalContext.current
+    var selectedTeam by remember { mutableIntStateOf(0) }
+    var selectedBonusIndex by remember { mutableIntStateOf(0) }
+    var showBonusDialog by remember { mutableStateOf(false) }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = selectedTeam == 0,
+                    onClick = { selectedTeam = 0 },
+                    label = { Text(content.players[PlayerPosition.ONE.index].name) }
+                )
+                FilterChip(
+                    selected = selectedTeam == 1,
+                    onClick = { selectedTeam = 1 },
+                    label = { Text(content.players[PlayerPosition.TWO.index].name) }
+                )
+            }
+
+            TextButton(onClick = { showBonusDialog = true }) {
+                Text(context.getString(content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }.resId))
+            }
+
+            TextButton(onClick = {
+                val team = if (selectedTeam == 0) PlayerPosition.ONE else PlayerPosition.TWO
+                val bonus = content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }
+                onAddBonus(team to bonus)
+            }) {
+                Text(stringResource(R.string.button_action_add))
             }
         }
     }
 
-    inner class BonusAdapter(val model: List<Pair<String, BeloteBonusValue>>) : AdaptableLinearLayoutAdapter {
-
-        @SuppressLint("SetTextI18n")
-        override fun getView(position: Int, parent: ViewGroup): View {
-            val view = ListItemEditionBonusBinding.inflate(layoutInflater)
-            view.bonus.text = "${model[position].first} • ${getString(model[position].second.resId)}"
-            view.remove.setOnClickListener {
-                viewModel.removeBonus(position)
+    if (showBonusDialog) {
+        AlertDialog(
+            onDismissRequest = { showBonusDialog = false },
+            confirmButton = {},
+            text = {
+                Column {
+                    content.availableBonuses.forEachIndexed { index, bonus ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = index == selectedBonusIndex,
+                                onClick = {
+                                    selectedBonusIndex = index
+                                    showBonusDialog = false
+                                }
+                            )
+                            Text(context.getString(bonus.resId))
+                        }
+                    }
+                }
             }
-            return view.root
-        }
-
-        override fun getCount(): Int = model.size
+        )
     }
 }

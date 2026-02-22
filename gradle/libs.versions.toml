@@ -12,6 +12,7 @@ ksp = "2.3.6"
 coroutines = "1.10.2"
 moshi = "1.15.2"
 androidx-lifecyle = "2.10.0"
+composeBom = "2026.01.01"
 
 [libraries]
 # Build
@@ -48,8 +49,20 @@ billingKtx = "com.android.billingclient:billing-ktx:8.3.0"
 # Timber
 timber = "com.jakewharton.timber:timber:5.0.1"
 
+# Compose
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
+compose-activity = "androidx.activity:activity-compose:1.10.1"
+compose-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecyle" }
+
 # Koin
 koinAndroid = "io.insert-koin:koin-android:4.1.1"
+koinCompose = "io.insert-koin:koin-androidx-compose:4.1.1"
 
 # Moshi
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
@@ -68,4 +81,5 @@ androidx-lifecycle = ["androidx-lifecycleCommon", "androidx-lifecycleProcess", "
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

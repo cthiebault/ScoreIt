@@ -16,6 +16,7 @@
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
 }
 
 val versionMajor = 5
@@ -49,7 +50,7 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
+        compose = true
     }
 
     bundle {
@@ -82,8 +83,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
 
@@ -96,13 +97,22 @@ dependencies {
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.coreKtx)
-    implementation(libs.androidx.constraintLayout)
-    implementation(libs.androidx.recyclerView)
     implementation(libs.material)
     implementation(libs.reviewKtx)
     implementation(libs.billingKtx)
     implementation(libs.koinAndroid)
+    implementation(libs.koinCompose)
     implementation(libs.timber)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.lifecycle.runtime)
+    debugImplementation(libs.compose.ui.tooling)
 
     coreLibraryDesugaring(libs.desugaring)
 }

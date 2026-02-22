@@ -17,98 +17,224 @@
 package com.sbgapps.scoreit.app.ui.edition.universal
 
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.activity.OnBackPressedCallback
-import androidx.recyclerview.widget.DiffUtil
-import com.sbgapps.scoreit.R
+import androidx.activity.addCallback
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.sbgapps.scoreit.app.ui.edition.EditionActivity
-import com.sbgapps.scoreit.core.ext.asListOfType
-import com.sbgapps.scoreit.core.widget.DividerItemDecoration
-import com.sbgapps.scoreit.core.widget.GenericRecyclerViewAdapter
-import com.sbgapps.scoreit.databinding.ActivityEditionUniversalBinding
+import com.sbgapps.scoreit.app.ui.theme.ScoreItTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UniversalEditionActivity : EditionActivity() {
 
     private val viewModel by viewModel<UniversalEditionViewModel>()
-    private lateinit var binding: ActivityEditionUniversalBinding
-    private val lapAdapter = GenericRecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityEditionUniversalBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setupActionBar(binding.toolbar)
+        onBackPressedDispatcher.addCallback(this) { viewModel.cancelEdition() }
 
-        binding.recyclerView.apply {
-            adapter = lapAdapter
-            itemAnimator = null
-            addItemDecoration(DividerItemDecoration(this@UniversalEditionActivity))
-        }
+        setContent {
+            ScoreItTheme {
+                val state by viewModel.states.collectAsState(initial = null)
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.cancelEdition()
-            }
-        })
-
-        viewModel.observeStates(this) { state ->
-            when (state) {
-                is UniversalEditionState.Content -> {
-                    val adapters = state.players.mapIndexed { index, player ->
-                        UniversalEditionAdapter(
-                            player,
-                            state.results[index],
-                            ::onScoreIncremented,
-                            ::onScoreEntered
-                        )
-                    }
-                    val diff = DiffUtil.calculateDiff(
-                        DiffCallback(
-                            lapAdapter.items.asListOfType(),
-                            adapters
-                        )
+                when (state) {
+                    is UniversalEditionState.Completed -> finish()
+                    is UniversalEditionState.Content -> UniversalEditionScreen(
+                        content = state as UniversalEditionState.Content,
+                        onBack = { viewModel.cancelEdition() },
+                        onDone = { viewModel.completeEdition() },
+                        onIncrement = { position, increment -> viewModel.incrementScore(increment, position) },
+                        onScoreSet = { position, score -> viewModel.setScore(position, score) }
                     )
-                    lapAdapter.updateItems(adapters, diff)
+                    else -> {}
                 }
-
-                is UniversalEditionState.Completed -> finish()
             }
         }
         viewModel.loadContent()
     }
+}
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.done -> {
-            viewModel.completeEdition()
-            true
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun UniversalEditionScreen(
+    content: UniversalEditionState.Content,
+    onBack: () -> Unit,
+    onDone: () -> Unit,
+    onIncrement: (Int, Int) -> Unit,
+    onScoreSet: (Int, Int) -> Unit,
+) {
+    var inputScorePosition by remember { mutableIntStateOf(-1) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onDone) {
+                        Icon(Icons.Default.Check, contentDescription = null)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
         }
-        else -> super.onOptionsItemSelected(item)
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            itemsIndexed(content.players) { index, player ->
+                PlayerScoreRow(
+                    name = player.name,
+                    score = content.results[index],
+                    onIncrement = { increment -> onIncrement(index, increment) },
+                    onScoreTap = { inputScorePosition = index }
+                )
+                if (index < content.players.lastIndex) {
+                    HorizontalDivider()
+                }
+            }
+        }
     }
 
-    private fun onScoreIncremented(position: Int, increment: Int) {
-        viewModel.incrementScore(increment, position)
+    if (inputScorePosition >= 0) {
+        ScoreInputSheet(
+            onDismiss = { inputScorePosition = -1 },
+            onConfirm = { score ->
+                onScoreSet(inputScorePosition, score)
+                inputScorePosition = -1
+            }
+        )
     }
+}
 
-    private fun onScoreEntered(position: Int) {
-        UniversalInputScore.newInstance(position).show(supportFragmentManager, null)
+@Composable
+private fun PlayerScoreRow(
+    name: String,
+    score: Int,
+    onIncrement: (Int) -> Unit,
+    onScoreTap: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
+        )
+        Button(onClick = { onIncrement(-1) }, modifier = Modifier.padding(horizontal = 4.dp)) {
+            Text("-1")
+        }
+        Text(
+            text = score.toString(),
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .weight(0.5f)
+        )
+        Button(onClick = { onIncrement(1) }, modifier = Modifier.padding(horizontal = 4.dp)) {
+            Text("+1")
+        }
+        Button(onClick = onScoreTap, modifier = Modifier.padding(start = 4.dp)) {
+            Text("...")
+        }
     }
+}
 
-    inner class DiffCallback(
-        private val oldEntries: List<UniversalEditionAdapter>,
-        private val newEntries: List<UniversalEditionAdapter>
-    ) : DiffUtil.Callback() {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ScoreInputSheet(
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState()
+    var text by remember { mutableStateOf("") }
 
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldEntries[oldItemPosition].score == newEntries[newItemPosition].score &&
-                    oldEntries[oldItemPosition].player == newEntries[newItemPosition].player
-
-        override fun getOldListSize(): Int = oldEntries.size
-
-        override fun getNewListSize(): Int = newEntries.size
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldEntries[oldItemPosition].score == newEntries[newItemPosition].score
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        val score = text.toIntOrNull() ?: 0
+                        onConfirm(score)
+                    }
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(
+                onClick = {
+                    val score = text.toIntOrNull() ?: 0
+                    onConfirm(score)
+                },
+                enabled = text.isNotEmpty() && text != "-"
+            ) {
+                Text("OK")
+            }
+        }
     }
 }

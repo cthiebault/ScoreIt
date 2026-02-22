@@ -16,10 +16,7 @@
 
 package com.sbgapps.scoreit.core.ui
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,26 +40,11 @@ open class BaseViewModel(defaultState: State) : ViewModel() {
         buffer(0, BufferOverflow.SUSPEND)
     }
 
-    private val states: Flow<State> by ::innerStates
-    private val effects: Flow<Effect> by ::innerEffects
-
-    private val stateWithLifeCycleLiveData: LiveData<State> =
-        states.asLiveData(viewModelScope.coroutineContext)
-    private val effectsWithLifeCycleLiveData: LiveData<Effect> =
-        effects.asLiveData(viewModelScope.coroutineContext)
+    val states: Flow<State> by ::innerStates
+    val effects: Flow<Effect> by ::innerEffects
 
     init {
         currentState = defaultState
-    }
-
-    fun observeStates(owner: LifecycleOwner, block: (State) -> Unit) {
-        stateWithLifeCycleLiveData.removeObservers(owner)
-        stateWithLifeCycleLiveData.observe(owner, block)
-    }
-
-    fun observeEffects(owner: LifecycleOwner, block: (Effect) -> Unit) {
-        effectsWithLifeCycleLiveData.removeObservers(owner)
-        effectsWithLifeCycleLiveData.observe(owner, block)
     }
 
     protected fun action(

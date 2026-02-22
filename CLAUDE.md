@@ -6,7 +6,7 @@ repository.
 ## Project Overview
 
 ScoreIt is an Android app for counting game points, supporting four game types: Universal, Tarot,
-Belote, and Coinche. Written in Kotlin, targeting Android API 21+.
+Belote, and Coinche. Written in Kotlin, targeting Android API 23+.
 
 ## Build Commands
 
@@ -33,14 +33,14 @@ app → cache → core
          cache → data (cache implements data's repository interfaces)
 ```
 
-- **app** — Android UI layer: Activities, ViewModels, adapters, DI wiring. Package:
+- **app** — Android UI layer: Activities with Jetpack Compose, ViewModels, DI wiring. Package:
   `com.sbgapps.scoreit`
 - **data** — Business logic: game models (sealed class hierarchy), Solver scoring engines, UseCases,
   repository interfaces. Package: `com.sbgapps.scoreit.data`
 - **cache** — Persistence: repository implementations, file-based game storage via Moshi JSON
   serialization, SharedPreferences. Package: `com.sbgapps.scoreit.cache`
 - **core** — Shared base classes and extensions: `BaseViewModel` (State/Effect pattern),
-  `BaseActivity`, Kotlin extension functions. Package: `com.sbgapps.scoreit.core`
+  StringFactory utilities, Kotlin extension functions. Package: `com.sbgapps.scoreit.core`
 
 ## Key Patterns
 
@@ -50,7 +50,11 @@ type means adding entries across model, solver, use case, and UI layers.
 
 **MVVM with State/Effect** — `BaseViewModel` in core uses `MutableStateFlow<State>` for UI state and
 `MutableSharedFlow<Effect>` for one-time events. ViewModels call `setState()` and `sendEffect()`.
-Activities observe via `observeStates()` and `observeEffects()`.
+Activities use Compose `collectAsState()` to observe state.
+
+**Compose UI** — All screens use Jetpack Compose (Material 3) with `setContent { ScoreItTheme { } }`
+inside `ComponentActivity` subclasses. No XML layouts or View Binding. `ScoreItTheme` provides
+Material 3 `ColorScheme` and custom `LocalScoreItColors` (gameWon/gameLost semantic colors).
 
 **Solver strategy** — Each game type has a dedicated Solver class (`UniversalSolver`, `TarotSolver`,
 `BeloteSolver`, `CoincheSolver`) that computes scores from laps. These are pure logic with no
@@ -65,9 +69,9 @@ cache). Wired together in `ScoreItApp`.
 ## Tech Stack
 
 - Kotlin 2.3, Coroutines 1.10, Gradle 9.3 (Kotlin DSL), AGP 9.0
-- AndroidX (lifecycle, fragment, appcompat), Material Design
-- Koin 2.1 (DI), Moshi 1.15 (JSON, with KSP codegen), Timber (logging)
-- View Binding (no Compose)
+- Jetpack Compose (Material 3), Compose BOM 2026.01.01
+- AndroidX (lifecycle, appcompat), Material Design (for shared element transitions)
+- Koin 4.1.1 (DI), Moshi 1.15 (JSON, with KSP codegen), Timber (logging)
 - JUnit 4 + MockK for tests
 
 ## Version Management

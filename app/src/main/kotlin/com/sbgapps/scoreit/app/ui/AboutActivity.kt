@@ -16,80 +16,163 @@
 
 package com.sbgapps.scoreit.app.ui
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.sbgapps.scoreit.BuildConfig
-import com.sbgapps.scoreit.core.ui.BaseActivity
-import com.sbgapps.scoreit.databinding.ActivityAboutBinding
+import com.sbgapps.scoreit.R
+import com.sbgapps.scoreit.app.ui.theme.ScoreItTheme
 
-
-class AboutActivity : BaseActivity() {
-
-    private lateinit var binding: ActivityAboutBinding
+class AboutActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAboutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            ScoreItTheme {
+                AboutScreen()
+            }
+        }
+    }
+}
 
-        binding.appVersionName.text = BuildConfig.VERSION_NAME
-        binding.logo.setOnClickListener { animate() }
+@Composable
+private fun AboutScreen() {
+    val context = LocalContext.current
+    var animTrigger by remember { mutableIntStateOf(0) }
 
-        binding.rate.setOnClickListener {
-            val manager = ReviewManagerFactory.create(this)
-            manager.requestReviewFlow().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    manager.launchReviewFlow(this, it.result)
-                } else {
-                    binding.rate.isVisible = false
+    val animProgress by animateFloatAsState(
+        targetValue = if (animTrigger > 0) 1f else 0f,
+        animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
+        label = "about_anim"
+    )
+
+    // Trigger the initial animation
+    if (animTrigger == 0) animTrigger = 1
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_score_it),
+            contentDescription = null,
+            modifier = Modifier
+                .scale(0.5f + 0.5f * animProgress)
+                .alpha(0.2f + 0.8f * animProgress)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { animTrigger++ }
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        Text(
+            text = context.getString(R.string.app_name),
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.alpha(animProgress)
+        )
+
+        Text(
+            text = BuildConfig.VERSION_NAME,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.alpha(animProgress)
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.alpha(animProgress)
+        ) {
+            IconButton(onClick = {
+                val manager = ReviewManagerFactory.create(context)
+                manager.requestReviewFlow().addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        manager.launchReviewFlow(context as AboutActivity, it.result)
+                    }
                 }
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_baseline_rate_review_24dp),
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+
+            IconButton(onClick = {
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = "mailto:".toUri()
+                    putExtra(Intent.EXTRA_EMAIL, "stephane" + "@" + "baiget" + ".fr")
+                    putExtra(Intent.EXTRA_SUBJECT, "ScoreIt")
+                }
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_email_24dp),
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+
+            IconButton(onClick = {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://github.com/StephaneBg/ScoreIt".toUri()
+                )
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_github_24dp),
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
+                )
             }
         }
 
-        binding.email.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = "mailto:".toUri()
-                putExtra(Intent.EXTRA_EMAIL, "stephane" + "@" + "baiget" + ".fr")
-                putExtra(Intent.EXTRA_SUBJECT, "ScoreIt")
-            }
-            manageIntent(intent)
-        }
+        Spacer(Modifier.height(16.dp))
 
-        binding.github.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, "https://github.com/StephaneBg/ScoreIt".toUri())
-            manageIntent(intent)
-        }
-
-        animate()
-    }
-
-    private fun manageIntent(intent: Intent) {
-        if (intent.resolveActivity(packageManager) != null) startActivity(intent)
-    }
-
-    private fun animate() {
-        AnimatorSet().apply {
-            playTogether(
-                ObjectAnimator.ofFloat(binding.logo, View.ALPHA, 0.2f, 1f),
-                ObjectAnimator.ofFloat(binding.logo, View.SCALE_X, 0.5f, 1f),
-                ObjectAnimator.ofFloat(binding.logo, View.SCALE_Y, 0.5f, 1f),
-                ObjectAnimator.ofFloat(binding.appName, View.ALPHA, 0f, 1f),
-                ObjectAnimator.ofFloat(binding.appVersionName, View.ALPHA, 0f, 1f),
-                ObjectAnimator.ofFloat(binding.author, View.ALPHA, 0f, 1f),
-                ObjectAnimator.ofFloat(binding.email, View.ALPHA, 0f, 1f),
-                ObjectAnimator.ofFloat(binding.rate, View.ALPHA, 0f, 1f),
-                ObjectAnimator.ofFloat(binding.github, View.ALPHA, 0f, 1f)
-            )
-            interpolator = FastOutSlowInInterpolator()
-            duration = 1200
-            start()
-        }
+        Text(
+            text = "Stéphane Baiget",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.alpha(animProgress)
+        )
     }
 }
