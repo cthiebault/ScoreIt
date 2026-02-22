@@ -15,11 +15,6 @@
   -->
 
 <resources>
-    <string name="error_no_connectivity">No network</string>
-    <string name="error_server">Server doesn\'t answer</string>
-    <string name="error_general">An error occurred</string>
-    <string name="error_retry_action">Retry</string>
-
     <string name="settings_light_mode">Light</string>
     <string name="settings_dark_mode">Dark</string>
     <string name="settings_battery_mode">Follows battery</string>

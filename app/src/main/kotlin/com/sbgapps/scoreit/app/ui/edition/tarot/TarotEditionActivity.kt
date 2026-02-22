@@ -54,7 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sbgapps.scoreit.R
@@ -118,7 +117,6 @@ private fun TarotEditionScreen(
     onAddBonus: (Pair<PlayerPosition, TarotBonusValue>) -> Unit,
     onRemoveBonus: (Int) -> Unit,
 ) {
-    val context = LocalContext.current
     var showTakerDialog by remember { mutableStateOf(false) }
     var showPartnerDialog by remember { mutableStateOf(false) }
     var showBidDialog by remember { mutableStateOf(false) }
@@ -255,7 +253,7 @@ private fun TarotEditionScreen(
 
             content.selectedBonuses.forEachIndexed { index, (player, bonus) ->
                 BonusRow(
-                    text = "${content.players[player.index].name} • ${context.getString(bonus.resId)}",
+                    text = "${content.players[player.index].name} • ${stringResource(bonus.resId)}",
                     onRemove = { onRemoveBonus(index) }
                 )
             }
@@ -368,7 +366,6 @@ private fun TarotBonusSheet(
     onDismiss: () -> Unit,
     onAddBonus: (Pair<PlayerPosition, TarotBonusValue>) -> Unit,
 ) {
-    val context = LocalContext.current
     var selectedPlayerIndex by remember { mutableIntStateOf(content.taker.index) }
     var selectedBonusIndex by remember { mutableIntStateOf(0) }
     var showPlayerDialog by remember { mutableStateOf(false) }
@@ -389,7 +386,7 @@ private fun TarotBonusSheet(
             }
 
             TextButton(onClick = { showBonusDialog = true }) {
-                Text(context.getString(content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }.resId))
+                Text(stringResource(content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }.resId))
             }
 
             TextButton(onClick = {
@@ -450,7 +447,7 @@ private fun TarotBonusSheet(
                                     showBonusDialog = false
                                 }
                             )
-                            Text(context.getString(bonus.resId))
+                            Text(stringResource(bonus.resId))
                         }
                     }
                 }

@@ -214,6 +214,9 @@ private fun HistoryScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val deletedMessage = stringResource(R.string.snackbar_msg_on_lap_deleted)
+    val undoLabel = stringResource(R.string.snackbar_action_on_lap_deleted)
+    val lapClickHint = stringResource(R.string.history_lap_click_hint)
 
     // Handle effects
     LaunchedEffect(Unit) {
@@ -222,8 +225,8 @@ private fun HistoryScreen(
                 is GameEvent.Edition -> onStartEdition(event.gameType)
                 is GameEvent.Deletion -> {
                     val result = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.snackbar_msg_on_lap_deleted),
-                        actionLabel = context.getString(R.string.snackbar_action_on_lap_deleted),
+                        message = deletedMessage,
+                        actionLabel = undoLabel,
                         duration = SnackbarDuration.Long
                     )
                     when (result) {
@@ -323,7 +326,7 @@ private fun HistoryScreen(
                             onTap = {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        context.getString(R.string.history_lap_click_hint),
+                                        lapClickHint,
                                         duration = SnackbarDuration.Short
                                     )
                                 }

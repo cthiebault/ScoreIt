@@ -244,7 +244,7 @@ private fun CoincheEditionScreen(
 
             content.selectedBonuses.forEachIndexed { index, (player, bonus) ->
                 BonusRow(
-                    text = "${content.players[player.index].name} • ${context.getString(bonus.resId)}",
+                    text = "${content.players[player.index].name} • ${stringResource(bonus.resId)}",
                     onRemove = { onRemoveBonus(index) }
                 )
             }
@@ -298,7 +298,6 @@ private fun CoincheBonusSheet(
     onDismiss: () -> Unit,
     onAddBonus: (Pair<PlayerPosition, BeloteBonusValue>) -> Unit,
 ) {
-    val context = LocalContext.current
     var selectedTeam by remember { mutableIntStateOf(0) }
     var selectedBonusIndex by remember { mutableIntStateOf(0) }
     var showBonusDialog by remember { mutableStateOf(false) }
@@ -327,7 +326,7 @@ private fun CoincheBonusSheet(
             }
 
             TextButton(onClick = { showBonusDialog = true }) {
-                Text(context.getString(content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }.resId))
+                Text(stringResource(content.availableBonuses.getOrElse(selectedBonusIndex) { content.availableBonuses.first() }.resId))
             }
 
             TextButton(onClick = {
@@ -360,7 +359,7 @@ private fun CoincheBonusSheet(
                                     showBonusDialog = false
                                 }
                             )
-                            Text(context.getString(bonus.resId))
+                            Text(stringResource(bonus.resId))
                         }
                     }
                 }
