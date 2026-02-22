@@ -199,8 +199,6 @@ private fun HistoryScreen(
     onNavigate: (NavigationDestination) -> Unit,
 ) {
     val state by gameViewModel.states.collectAsState(initial = null)
-    val effects by gameViewModel.effects.collectAsState(initial = null)
-
     val content = state as? Content
 
     var showNavDrawer by remember { mutableStateOf(false) }
@@ -218,21 +216,22 @@ private fun HistoryScreen(
     val context = LocalContext.current
 
     // Handle effects
-    LaunchedEffect(effects) {
-        when (val event = effects) {
-            is GameEvent.Edition -> onStartEdition(event.gameType)
-            is GameEvent.Deletion -> {
-                val result = snackbarHostState.showSnackbar(
-                    message = context.getString(R.string.snackbar_msg_on_lap_deleted),
-                    actionLabel = context.getString(R.string.snackbar_action_on_lap_deleted),
-                    duration = SnackbarDuration.Long
-                )
-                when (result) {
-                    SnackbarResult.ActionPerformed -> gameViewModel.undoDeletion()
-                    SnackbarResult.Dismissed -> gameViewModel.confirmDeletion()
+    LaunchedEffect(Unit) {
+        gameViewModel.effects.collect { event ->
+            when (event) {
+                is GameEvent.Edition -> onStartEdition(event.gameType)
+                is GameEvent.Deletion -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.snackbar_msg_on_lap_deleted),
+                        actionLabel = context.getString(R.string.snackbar_action_on_lap_deleted),
+                        duration = SnackbarDuration.Long
+                    )
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> gameViewModel.undoDeletion()
+                        SnackbarResult.Dismissed -> gameViewModel.confirmDeletion()
+                    }
                 }
             }
-            else -> {}
         }
     }
 
