@@ -17,6 +17,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    id("jacoco-convention")
 }
 
 val versionMajor = 5
@@ -113,6 +114,9 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.lifecycle.runtime)
     debugImplementation(libs.compose.ui.tooling)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 
     coreLibraryDesugaring(libs.desugaring)
 }

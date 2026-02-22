@@ -16,6 +16,7 @@
 
 plugins {
     alias(libs.plugins.android.library)
+    id("jacoco-convention")
 }
 
 android {
@@ -43,6 +44,8 @@ dependencies {
     implementation(libs.androidx.lifecyleViewmodel)
     implementation(libs.koinAndroid)
     implementation(libs.timber)
+
+    testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugaring)
 }

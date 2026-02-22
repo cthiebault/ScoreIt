@@ -16,6 +16,7 @@
 
 plugins {
     alias(libs.plugins.android.library)
+    id("jacoco-convention")
 }
 
 android {
@@ -48,6 +49,9 @@ dependencies {
     implementation(libs.billingKtx)
     implementation(libs.koinAndroid)
     implementation(libs.timber)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 
     coreLibraryDesugaring(libs.desugaring)
 }
