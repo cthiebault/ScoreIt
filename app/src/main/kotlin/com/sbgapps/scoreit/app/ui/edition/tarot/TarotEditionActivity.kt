@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -34,6 +35,7 @@ import com.sbgapps.scoreit.data.model.TarotBonusValue
 import com.sbgapps.scoreit.data.model.TarotOudlerValue
 import com.sbgapps.scoreit.databinding.ActivityEditionTarotBinding
 import com.sbgapps.scoreit.databinding.ListItemEditionBonusBinding
+import java.text.NumberFormat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TarotEditionActivity : EditionActivity() {
@@ -47,6 +49,12 @@ class TarotEditionActivity : EditionActivity() {
         binding = ActivityEditionTarotBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupActionBar(binding.toolbar)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.cancelEdition()
+            }
+        })
 
         viewModel.observeStates(this) { state ->
             when (state) {
@@ -104,7 +112,7 @@ class TarotEditionActivity : EditionActivity() {
                     if (state.oudlers.contains(TarotOudlerValue.EXCUSE)) binding.oudlersButtonGroup.check(R.id.buttonExcuse)
                     binding.oudlersButtonGroup.addOnButtonCheckedListener(buttonCheckedListener)
 
-                    binding.points.text = state.points.toString()
+                    binding.points.text = NumberFormat.getInstance().format(state.points)
                     bindButton(binding.pointsPlusTen, 10, state.stepPointsByTen.canAdd)
                     bindButton(binding.pointsMinusTen, -10, state.stepPointsByTen.canSubtract)
                     bindButton(binding.pointsPlusOne, 1, state.stepPointsByOne.canAdd)
@@ -120,7 +128,7 @@ class TarotEditionActivity : EditionActivity() {
                     binding.bonusContainer.adapter = BonusAdapter(model)
                 }
 
-                TarotEditionState.Completed -> super.onBackPressed()
+                TarotEditionState.Completed -> finish()
             }
         }
         viewModel.loadContent()
@@ -133,10 +141,6 @@ class TarotEditionActivity : EditionActivity() {
         } else {
             super.onOptionsItemSelected(item)
         }
-
-    override fun onBackPressed() {
-        viewModel.cancelEdition()
-    }
 
     private val buttonCheckedListener = MaterialButtonToggleGroup.OnButtonCheckedListener { view, _, _ ->
         val oudlers = mutableListOf<TarotOudlerValue>()

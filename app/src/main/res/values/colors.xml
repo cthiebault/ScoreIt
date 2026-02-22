@@ -25,7 +25,7 @@
     <color name="on_background">@color/md_grey_200</color>
 
     <color name="navigation_bar">@color/md_black_1000</color>
-    <color name="status_bar">@color/md_black_1000</color>
+    <color name="status_bar">@color/md_grey_50</color>
 
     <color name="game_won">@color/md_green_400</color>
     <color name="game_lost">@color/md_red_400</color>

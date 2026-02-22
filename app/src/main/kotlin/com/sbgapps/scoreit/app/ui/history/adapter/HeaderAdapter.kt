@@ -19,6 +19,7 @@ package com.sbgapps.scoreit.app.ui.history.adapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isInvisible
+import java.text.NumberFormat
 import com.sbgapps.scoreit.app.model.Header
 import com.sbgapps.scoreit.app.ui.widget.AdaptableLinearLayoutAdapter
 import com.sbgapps.scoreit.core.ext.layoutInflater
@@ -37,7 +38,7 @@ class HeaderAdapter(
             setTextColor(player.color)
             setOnClickListener { editCallback(position) }
         }
-        binding.score.text = model.scores[position].toString()
+        binding.score.text = NumberFormat.getInstance().format(model.scores[position])
         binding.marker.isInvisible = !model.markers[position]
         return binding.root
     }

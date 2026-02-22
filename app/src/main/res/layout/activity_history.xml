@@ -65,6 +65,7 @@
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/button_action_add"
         android:transitionName="shared_element_container"
         app:backgroundTint="?colorPrimary"
         app:layout_anchor="@id/bottomAppBar"

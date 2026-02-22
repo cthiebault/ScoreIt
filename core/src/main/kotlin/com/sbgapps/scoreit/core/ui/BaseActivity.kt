@@ -38,6 +38,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun onUpPressed() {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 }

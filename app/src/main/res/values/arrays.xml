@@ -39,11 +39,6 @@
         <item>@string/dialog_action_game_create</item>
     </string-array>
 
-    <string-array name="dialog_game_actions">
-        <item>@string/dialog_action_game_discard</item>
-        <item>@string/dialog_action_game_load</item>
-    </string-array>
-
     <integer-array name="colors">
         <item>@color/md_red_500</item>
         <item>@color/md_pink_500</item>

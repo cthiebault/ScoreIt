@@ -19,6 +19,7 @@ package com.sbgapps.scoreit.app.ui.scoreboard
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import java.text.NumberFormat
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -46,7 +47,7 @@ class ScoreboardActivity : BaseActivity() {
         binding = ActivityScoreboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.back.setOnClickListener { onBackPressed() }
+        binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         bindButton(binding.minusScoreOne, -1, PlayerPosition.ONE)
         bindButton(binding.plusScoreOne, +1, PlayerPosition.ONE)
         bindButton(binding.minusScoreTwo, -1, PlayerPosition.TWO)
@@ -59,8 +60,9 @@ class ScoreboardActivity : BaseActivity() {
         scoreBoarViewModel.observeStates(this) { state ->
             when (state) {
                 is Content -> {
-                    binding.scoreOne.text = state.scoreBoard.scoreOne.toString()
-                    binding.scoreTwo.text = state.scoreBoard.scoreTwo.toString()
+                    val nf = NumberFormat.getInstance()
+                    binding.scoreOne.text = nf.format(state.scoreBoard.scoreOne)
+                    binding.scoreTwo.text = nf.format(state.scoreBoard.scoreTwo)
                     binding.nameOne.text = state.scoreBoard.nameOne
                     binding.nameTwo.text = state.scoreBoard.nameTwo
                 }

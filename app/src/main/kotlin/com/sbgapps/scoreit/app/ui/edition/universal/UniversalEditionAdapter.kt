@@ -22,6 +22,7 @@ import com.sbgapps.scoreit.core.widget.BaseViewHolder
 import com.sbgapps.scoreit.core.widget.ItemAdapter
 import com.sbgapps.scoreit.data.model.Player
 import com.sbgapps.scoreit.databinding.ListItemEditionUniversalBinding
+import java.text.NumberFormat
 
 class UniversalEditionAdapter(
     val player: Player,
@@ -48,7 +49,7 @@ class UniversalEditionAdapter(
         initButton(binding.pointsMinusTen, position, -10)
         initButton(binding.pointsMinusHundred, position, -100)
         binding.score.apply {
-            text = score.toString()
+            text = NumberFormat.getInstance().format(score)
             setOnClickListener { inputCallback(position) }
         }
     }
