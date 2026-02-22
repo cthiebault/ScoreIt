@@ -46,7 +46,7 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.moshi.adapters)
     implementation(libs.billingKtx)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
 
     coreLibraryDesugaring(libs.desugaring)

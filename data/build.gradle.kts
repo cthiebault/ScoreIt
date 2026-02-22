@@ -43,7 +43,7 @@ dependencies {
 
     implementation(libs.androidx.annotation)
     implementation(libs.billingKtx)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
     implementation(libs.moshi.kotlin)
 

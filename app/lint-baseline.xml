@@ -2,6 +2,50 @@
 <issues format="6" by="lint 9.0.1" type="baseline" client="gradle" dependencies="false" name="AGP (9.0.1)" variant="all" version="9.0.1">
 
     <issue
+        id="MissingSuperCall"
+        message="Overriding method should call `super.onBackPressed`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/sbgapps/scoreit/app/ui/edition/belote/BeloteEditionActivity.kt"
+            line="101"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="MissingSuperCall"
+        message="Overriding method should call `super.onBackPressed`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/sbgapps/scoreit/app/ui/edition/coinche/CoincheEditionActivity.kt"
+            line="116"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="MissingSuperCall"
+        message="Overriding method should call `super.onBackPressed`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/sbgapps/scoreit/app/ui/edition/tarot/TarotEditionActivity.kt"
+            line="137"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="MissingSuperCall"
+        message="Overriding method should call `super.onBackPressed`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/sbgapps/scoreit/app/ui/edition/universal/UniversalEditionActivity.kt"
+            line="75"
+            column="18"/>
+    </issue>
+
+    <issue
         id="GestureBackNavigation"
         message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
         errorLine1="    override fun onBackPressed() {"
@@ -58,167 +102,13 @@
 
     <issue
         id="GradleDependency"
-        message="A newer version of androidx.lifecycle:lifecycle-common-java8 than 2.8.7 is available: 2.10.0"
-        errorLine1="androidx-lifecyle = &quot;2.8.7&quot;"
-        errorLine2="                    ~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="14"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.lifecycle:lifecycle-livedata-ktx than 2.8.7 is available: 2.10.0"
-        errorLine1="androidx-lifecyle = &quot;2.8.7&quot;"
-        errorLine2="                    ~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="14"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.lifecycle:lifecycle-process than 2.8.7 is available: 2.10.0"
-        errorLine1="androidx-lifecyle = &quot;2.8.7&quot;"
-        errorLine2="                    ~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="14"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of com.android.tools:desugar_jdk_libs than 2.1.4 is available: 2.1.5"
-        errorLine1="desugaring = &quot;com.android.tools:desugar_jdk_libs:2.1.4&quot;"
-        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="18"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.1"
-        errorLine1="androidx-appCompat = &quot;androidx.appcompat:appcompat:1.6.1&quot;"
-        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="29"
-            column="22"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.recyclerview:recyclerview than 1.3.1 is available: 1.4.0"
-        errorLine1="androidx-recyclerView = &quot;androidx.recyclerview:recyclerview:1.3.1&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="30"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.1"
-        errorLine1="androidx-constraintLayout = &quot;androidx.constraintlayout:constraintlayout:2.1.4&quot;"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="31"
-            column="29"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.6.2 is available: 2.10.0"
-        errorLine1="androidx-lifecyleViewmodel = &quot;androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2&quot;"
-        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="32"
-            column="30"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.core:core-ktx than 1.12.0 is available: 1.17.0"
-        errorLine1="androidx-coreKtx = &quot;androidx.core:core-ktx:1.12.0&quot;"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="33"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.fragment:fragment-ktx than 1.6.1 is available: 1.8.9"
-        errorLine1="androidx-fragmentKtx = &quot;androidx.fragment:fragment-ktx:1.6.1&quot;"
-        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="34"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of androidx.annotation:annotation than 1.7.0 is available: 1.9.1"
-        errorLine1="androidx-annotation = &quot;androidx.annotation:annotation:1.7.0&quot;"
-        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="36"
-            column="23"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of com.google.android.material:material than 1.9.0 is available: 1.13.0"
-        errorLine1="material = &quot;com.google.android.material:material:1.9.0&quot;"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        message="A newer version of com.google.android.material:material than 1.12.0 is available: 1.13.0"
+        errorLine1="material = &quot;com.google.android.material:material:1.12.0&quot;"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
             line="44"
             column="12"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of com.android.billingclient:billing-ktx than 6.0.1 is available: 8.3.0"
-        errorLine1="billingKtx = &quot;com.android.billingclient:billing-ktx:6.0.1&quot;"
-        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="46"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
-        message="A newer version of io.insert-koin:koin-androidx-viewmodel than 2.1.6 is available: 2.2.3"
-        errorLine1="koinAndroidX = &quot;io.insert-koin:koin-androidx-viewmodel:2.1.6&quot;"
-        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="52"
-            column="16"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
-        message="A newer version of io.mockk:mockk than 1.13.16 is available: 1.14.9"
-        errorLine1="mockk = &quot;io.mockk:mockk:1.13.16&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/projects/github/ScoreIt/gradle/libs.versions.toml"
-            line="63"
-            column="9"/>
     </issue>
 
     <issue
@@ -318,6 +208,13 @@
             file="src/main/AndroidManifest.xml"
             line="25"
             column="30"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v23`) is unnecessary; `minSdkVersion` is 23. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v23"/>
     </issue>
 
     <issue

@@ -44,7 +44,7 @@ dependencies {
     implementation(libs.androidx.fragmentKtx)
     implementation(libs.androidx.lifecyleViewmodel)
     implementation(libs.material)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
     implementation(libs.bundles.androidx.lifecycle)
 

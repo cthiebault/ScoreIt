@@ -102,9 +102,9 @@ dependencies {
     implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.recyclerView)
     implementation(libs.material)
-    implementation(libs.playCore)
+    implementation(libs.reviewKtx)
     implementation(libs.billingKtx)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
 
     coreLibraryDesugaring(libs.desugaring)

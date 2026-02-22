@@ -27,11 +27,11 @@ import com.sbgapps.scoreit.app.ui.prefs.PreferencesActivity
 import com.sbgapps.scoreit.app.ui.scoreboard.ScoreboardActivity
 import com.sbgapps.scoreit.core.ext.start
 import com.sbgapps.scoreit.data.model.GameType
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class NavDrawerFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<GameViewModel>()
+    private val viewModel by activityViewModel<GameViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_nav_drawer, container, false)

@@ -25,7 +25,7 @@ import com.sbgapps.scoreit.app.ui.edition.universal.UniversalEditionViewModel
 import com.sbgapps.scoreit.app.ui.prefs.PreferencesViewModel
 import com.sbgapps.scoreit.app.ui.saved.SavedGameViewModel
 import com.sbgapps.scoreit.app.ui.scoreboard.ScoreBoardViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val uiModule = module {

@@ -25,11 +25,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sbgapps.scoreit.data.model.PlayerPosition
 import com.sbgapps.scoreit.data.model.TarotBonusValue
 import com.sbgapps.scoreit.databinding.FragmentEditionTarotBonusBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class TarotEditionBonusFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<TarotEditionViewModel>()
+    private val viewModel by activityViewModel<TarotEditionViewModel>()
     private lateinit var binding: FragmentEditionTarotBonusBinding
     private var tarotBonus: TarotBonusValue = TarotBonusValue.PETIT_AU_BOUT
     private var player: PlayerPosition = PlayerPosition.ONE
