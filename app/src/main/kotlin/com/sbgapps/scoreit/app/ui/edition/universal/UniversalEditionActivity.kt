@@ -18,6 +18,7 @@ package com.sbgapps.scoreit.app.ui.edition.universal
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.DiffUtil
 import com.sbgapps.scoreit.R
 import com.sbgapps.scoreit.app.ui.edition.EditionActivity
@@ -46,6 +47,12 @@ class UniversalEditionActivity : EditionActivity() {
             addItemDecoration(DividerItemDecoration(this@UniversalEditionActivity))
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.cancelEdition()
+            }
+        })
+
         viewModel.observeStates(this) { state ->
             when (state) {
                 is UniversalEditionState.Content -> {
@@ -66,14 +73,10 @@ class UniversalEditionActivity : EditionActivity() {
                     lapAdapter.updateItems(adapters, diff)
                 }
 
-                is UniversalEditionState.Completed -> super.onBackPressed()
+                is UniversalEditionState.Completed -> finish()
             }
         }
         viewModel.loadContent()
-    }
-
-    override fun onBackPressed() {
-        viewModel.cancelEdition()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {

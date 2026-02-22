@@ -19,9 +19,9 @@ package com.sbgapps.scoreit.app.ui
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -55,7 +55,7 @@ class AboutActivity : BaseActivity() {
 
         binding.email.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:")
+                data = "mailto:".toUri()
                 putExtra(Intent.EXTRA_EMAIL, "stephane" + "@" + "baiget" + ".fr")
                 putExtra(Intent.EXTRA_SUBJECT, "ScoreIt")
             }
@@ -63,8 +63,7 @@ class AboutActivity : BaseActivity() {
         }
 
         binding.github.setOnClickListener {
-            val webPage: Uri = Uri.parse("https://github.com/StephaneBg/ScoreIt")
-            val intent = Intent(Intent.ACTION_VIEW, webPage)
+            val intent = Intent(Intent.ACTION_VIEW, "https://github.com/StephaneBg/ScoreIt".toUri())
             manageIntent(intent)
         }
 

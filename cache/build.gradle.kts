@@ -15,8 +15,7 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -32,6 +31,8 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         isCoreLibraryDesugaringEnabled = true
     }
 }
@@ -45,8 +46,7 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.moshi.adapters)
     implementation(libs.billingKtx)
-    implementation(libs.storage)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
 
     coreLibraryDesugaring(libs.desugaring)

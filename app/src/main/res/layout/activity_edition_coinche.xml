@@ -20,7 +20,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -172,7 +171,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_large"
                 android:background="?selectableItemBackground"
-                android:drawableEnd="@drawable/ic_arrow_drop_down_24dp"
+                app:drawableEndCompat="@drawable/ic_arrow_drop_down_24dp"
                 android:padding="@dimen/margin_padding_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

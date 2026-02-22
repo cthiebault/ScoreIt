@@ -32,7 +32,6 @@
     <string name="drawer_game_tarot">Tarot</string>
     <string name="drawer_game_belote">Belote</string>
     <string name="drawer_game_coinche">Coinche</string>
-    <string name="drawer_thank">Remerciements</string>
     <string name="drawer_about">A propos</string>
     <string name="drawer_preferences">Préférences</string>
 
@@ -43,7 +42,6 @@
     <string name="tarot_header_bid">Contrat</string>
     <string name="tarot_header_oudlers">Bouts</string>
     <string name="tarot_header_points">Points</string>
-    <string name="tarot_header_bonuses">Primes</string>
     <string name="tarot_oudler_excuse">Excuse</string>
     <string name="tarot_oudler_petit">Petit</string>
     <string name="tarot_oudler_twentyone">Vingt et un</string>
@@ -52,7 +50,6 @@
     <string name="belote_header_taker">Preneurs</string>
     <string name="belote_header_points">Points</string>
     <string name="belote_header_bonuses">Bonus</string>
-    <string name="belote_header_announces">Annonces</string>
     <string name="belote_points_taker">Preneurs</string>
     <string name="belote_points_defender">Défenseurs</string>
     <string name="belote_info_win">L\'attaque a rempli son contrat avec %1$s points</string>
@@ -65,22 +62,15 @@
     <string name="coinche_header_bid">Contrat</string>
     <string name="coinche_header_coinche">Coinche</string>
     <string name="coinche_header_points">Points</string>
-    <string name="coinche_header_bonuses">Bonus</string>
-    <string name="coinche_header_announces">Annonces</string>
     <string name="coinche_points_taker">Preneurs</string>
     <string name="coinche_points_defender">Défenseurs</string>
     <string name="coinche_info_win">L\'attaque a rempli son contrat avec %1$s points</string>
     <string name="coinche_info_lose">L\'attaque chute son contrat et la défense réalise %1$s points</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_current_game">Partie en cours</string>
-    <string name="dialog_title_filename">Nom du fichier</string>
     <string name="dialog_title_player_number">Nombre de joueurs</string>
-    <string name="dialog_title_edit_name">Editer le nom</string>
-    <string name="dialog_action_game_discard">Abandonner</string>
     <string name="dialog_action_game_reset">Remise à zéro</string>
     <string name="dialog_action_game_create">Enregistrer et créer</string>
-    <string name="dialog_action_game_load">Sauver et charger</string>
     <string name="dialog_action_enter_name">Entrer le nom</string>
     <string name="dialog_action_new_name">Nouveau nom</string>
     <string name="dialog_action_pick_color">Sélectionner une couleur</string>
@@ -90,13 +80,8 @@
     <string name="snackbar_action_on_lap_deleted">Annuler</string>
 
     <!-- Button -->
-    <string name="button_action_cancel">Annuler</string>
     <string name="button_action_add">Ajouter</string>
     <string name="button_action_ok">OK</string>
-    <string name="button_donate_coffee">Offrez moi un café</string>
-    <string name="button_donate_coffee_donated">Vous m\'avez offert un café. Merci !</string>
-    <string name="button_donate_beer">Offrez moi une bière</string>
-    <string name="button_donate_beer_donated">Vous m\'avez offert une bière. Merci !</string>
 
     <!-- Menu -->
     <string name="menu_action_clear">Effacer</string>

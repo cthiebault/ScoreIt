@@ -26,11 +26,11 @@ import com.sbgapps.scoreit.R
 import com.sbgapps.scoreit.data.model.BeloteBonusValue
 import com.sbgapps.scoreit.data.model.PlayerPosition
 import com.sbgapps.scoreit.databinding.FragmentEditionBeloteBonusBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class BeloteEditionBonusFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<BeloteEditionViewModel>()
+    private val viewModel by activityViewModel<BeloteEditionViewModel>()
     private var beloteBonus: BeloteBonusValue = BeloteBonusValue.BELOTE
     private lateinit var binding: FragmentEditionBeloteBonusBinding
 

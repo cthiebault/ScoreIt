@@ -26,11 +26,11 @@ import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sbgapps.scoreit.R
 import com.sbgapps.scoreit.databinding.FragmentUniversalInputScoreBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class UniversalInputScore : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<UniversalEditionViewModel>()
+    private val viewModel by activityViewModel<UniversalEditionViewModel>()
     private lateinit var binding: FragmentUniversalInputScoreBinding
     private val playerIndex: Int
         get() = arguments?.getInt(ARG_PLAYER_POSITION) ?: error("Use newInstance")

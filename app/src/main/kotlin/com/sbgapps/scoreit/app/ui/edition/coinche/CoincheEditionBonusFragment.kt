@@ -26,11 +26,11 @@ import com.sbgapps.scoreit.R
 import com.sbgapps.scoreit.data.model.BeloteBonusValue
 import com.sbgapps.scoreit.data.model.PlayerPosition
 import com.sbgapps.scoreit.databinding.FragmentEditionCoincheBonusBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class CoincheEditionBonusFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<CoincheEditionViewModel>()
+    private val viewModel by activityViewModel<CoincheEditionViewModel>()
     private var beloteBonus: BeloteBonusValue = BeloteBonusValue.BELOTE
     private lateinit var binding: FragmentEditionCoincheBonusBinding
 

@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -40,13 +41,18 @@ class BeloteEditionActivity : EditionActivity() {
     private val viewModel by viewModel<BeloteEditionViewModel>()
     private lateinit var binding: ActivityEditionBeloteBinding
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityEditionBeloteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupActionBar(binding.toolbar)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.cancelEdition()
+            }
+        })
 
         viewModel.observeStates(this) { state ->
             when (state) {
@@ -84,33 +90,26 @@ class BeloteEditionActivity : EditionActivity() {
                     binding.bonusContainer.adapter = BonusAdapter(model)
                 }
 
-                is BeloteEditionState.Completed -> super.onBackPressed()
+                is BeloteEditionState.Completed -> finish()
             }
         }
         viewModel.loadContent()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.done -> {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.done) {
             viewModel.completeEdition()
             true
+        } else {
+            super.onOptionsItemSelected(item)
         }
-        else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        viewModel.cancelEdition()
-    }
 
     private val scorerCheckedListener = MaterialButtonToggleGroup.OnButtonCheckedListener { _, checkedId, isChecked ->
         if (isChecked) {
-            viewModel.changeTaker(
-                when (checkedId) {
-                    R.id.buttonTeamOne -> PlayerPosition.ONE
-                    R.id.buttonTeamTwo -> PlayerPosition.TWO
-                    else -> error("Unknown player")
-                }
-            )
+            val position = if (checkedId == R.id.buttonTeamOne) PlayerPosition.ONE
+            else if (checkedId == R.id.buttonTeamTwo) PlayerPosition.TWO
+            else error("Unknown player")
+            viewModel.changeTaker(position)
         }
     }
 

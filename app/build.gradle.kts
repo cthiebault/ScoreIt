@@ -15,8 +15,7 @@
  */
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
 }
 
 val versionMajor = 5
@@ -83,8 +82,11 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         isCoreLibraryDesugaringEnabled = true
     }
+
 }
 
 dependencies {
@@ -97,9 +99,9 @@ dependencies {
     implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.recyclerView)
     implementation(libs.material)
-    implementation(libs.playCore)
+    implementation(libs.reviewKtx)
     implementation(libs.billingKtx)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
 
     coreLibraryDesugaring(libs.desugaring)

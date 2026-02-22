@@ -15,8 +15,7 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -32,6 +31,8 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         isCoreLibraryDesugaringEnabled = true
     }
 }
@@ -43,7 +44,7 @@ dependencies {
     implementation(libs.androidx.fragmentKtx)
     implementation(libs.androidx.lifecyleViewmodel)
     implementation(libs.material)
-    implementation(libs.koinAndroidX)
+    implementation(libs.koinAndroid)
     implementation(libs.timber)
     implementation(libs.bundles.androidx.lifecycle)
 

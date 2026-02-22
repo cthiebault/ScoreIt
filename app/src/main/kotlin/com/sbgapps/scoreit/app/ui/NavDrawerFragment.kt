@@ -27,27 +27,25 @@ import com.sbgapps.scoreit.app.ui.prefs.PreferencesActivity
 import com.sbgapps.scoreit.app.ui.scoreboard.ScoreboardActivity
 import com.sbgapps.scoreit.core.ext.start
 import com.sbgapps.scoreit.data.model.GameType
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class NavDrawerFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by sharedViewModel<GameViewModel>()
+    private val viewModel by activityViewModel<GameViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_nav_drawer, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (view as NavigationView).setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.universal -> viewModel.selectGame(GameType.UNIVERSAL)
-                R.id.scoreboard -> requireContext().start<ScoreboardActivity>()
-                R.id.tarot -> viewModel.selectGame(GameType.TAROT)
-                R.id.belote -> viewModel.selectGame(GameType.BELOTE)
-                R.id.coinche -> viewModel.selectGame(GameType.COINCHE)
-
-                R.id.preferences -> requireContext().start<PreferencesActivity>()
-                R.id.about -> requireContext().start<AboutActivity>()
-            }
+            val itemId = menuItem.itemId
+            if (itemId == R.id.universal) viewModel.selectGame(GameType.UNIVERSAL)
+            else if (itemId == R.id.scoreboard) requireContext().start<ScoreboardActivity>()
+            else if (itemId == R.id.tarot) viewModel.selectGame(GameType.TAROT)
+            else if (itemId == R.id.belote) viewModel.selectGame(GameType.BELOTE)
+            else if (itemId == R.id.coinche) viewModel.selectGame(GameType.COINCHE)
+            else if (itemId == R.id.preferences) requireContext().start<PreferencesActivity>()
+            else if (itemId == R.id.about) requireContext().start<AboutActivity>()
             this@NavDrawerFragment.dismiss()
             true
         }

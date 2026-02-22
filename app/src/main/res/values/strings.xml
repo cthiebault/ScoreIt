@@ -34,7 +34,6 @@
     <string name="drawer_game_tarot">Tarot</string>
     <string name="drawer_game_belote">Belote</string>
     <string name="drawer_game_coinche">Coinche</string>
-    <string name="drawer_thank">Thank</string>
     <string name="drawer_about">About</string>
     <string name="drawer_preferences">Preferences</string>
 
@@ -45,7 +44,6 @@
     <string name="tarot_header_bid">Bid</string>
     <string name="tarot_header_oudlers">Oudlers</string>
     <string name="tarot_header_points">Points</string>
-    <string name="tarot_header_bonuses">Bonuses</string>
     <string name="tarot_oudler_excuse">Excuse</string>
     <string name="tarot_oudler_petit">Petit</string>
     <string name="tarot_oudler_twentyone">21</string>
@@ -54,7 +52,6 @@
     <string name="belote_header_taker">Taker</string>
     <string name="belote_header_points">Points</string>
     <string name="belote_header_bonuses">Bonus</string>
-    <string name="belote_header_announces">Announces</string>
     <string name="belote_points_taker">Taker</string>
     <string name="belote_points_defender">Defender</string>
     <string name="belote_info_win">Taker has made the contract with %1$s points</string>
@@ -67,22 +64,15 @@
     <string name="coinche_header_bid">Bid</string>
     <string name="coinche_header_coinche">Coinche</string>
     <string name="coinche_header_points">Points</string>
-    <string name="coinche_header_bonuses">Bonuses</string>
-    <string name="coinche_header_announces">Announces</string>
     <string name="coinche_points_taker">Taker</string>
     <string name="coinche_points_defender">Defender</string>
     <string name="coinche_info_win">Taker has made the contract with %1$s points</string>
     <string name="coinche_info_lose">Taker has not made the contract and defense gets %1$s points</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_current_game">Current game</string>
-    <string name="dialog_title_filename">Filename</string>
     <string name="dialog_title_player_number">Number of players</string>
-    <string name="dialog_title_edit_name">Edit name</string>
-    <string name="dialog_action_game_discard">Discard</string>
     <string name="dialog_action_game_reset">Reset scores</string>
     <string name="dialog_action_game_create">Save and create</string>
-    <string name="dialog_action_game_load">Save and load</string>
     <string name="dialog_action_enter_name">Enter name</string>
     <string name="dialog_action_new_name">New name</string>
     <string name="dialog_action_pick_color">Pick color</string>
@@ -92,13 +82,8 @@
     <string name="snackbar_action_on_lap_deleted">Undo</string>
 
     <!-- Button -->
-    <string name="button_action_cancel">Cancel</string>
     <string name="button_action_add">Add</string>
     <string name="button_action_ok">OK</string>
-    <string name="button_donate_coffee">Buy me a coffee</string>
-    <string name="button_donate_coffee_donated">You bought me a coffee. Thanks!</string>
-    <string name="button_donate_beer">Buy me a beer</string>
-    <string name="button_donate_beer_donated">You bought me a beer. Thanks!</string>
 
     <!-- Menu -->
     <string name="menu_action_clear">Clear</string>
