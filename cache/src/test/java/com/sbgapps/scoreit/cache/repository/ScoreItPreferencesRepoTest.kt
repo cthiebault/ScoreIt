@@ -5,10 +5,11 @@ import com.sbgapps.scoreit.data.model.GameType
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class ScoreItPreferencesRepoTest {
 
@@ -102,10 +103,10 @@ class ScoreItPreferencesRepoTest {
         verify { editor.putInt("cactus_player_count", 7) }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `setPlayerCount lève une erreur pour la belote`() {
         every { preferences.getInt("selected_game", any()) } returns GameType.BELOTE.ordinal
-        repo.setPlayerCount(3)
+        assertThrows<IllegalStateException> { repo.setPlayerCount(3) }
     }
 
     // --- isRounded ---
@@ -122,9 +123,9 @@ class ScoreItPreferencesRepoTest {
         assertFalse(repo.isRounded(GameType.COINCHE))
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `isRounded lève une erreur pour l'universel`() {
-        repo.isRounded(GameType.UNIVERSAL)
+        assertThrows<IllegalStateException> { repo.isRounded(GameType.UNIVERSAL) }
     }
 
     // --- setRounded ---
@@ -141,9 +142,9 @@ class ScoreItPreferencesRepoTest {
         verify { editor.putBoolean("coinche_round_score", true) }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `setRounded lève une erreur pour le tarot`() {
-        repo.setRounded(GameType.TAROT, true)
+        assertThrows<IllegalStateException> { repo.setRounded(GameType.TAROT, true) }
     }
 
     // --- isTotalDisplayed ---
@@ -160,9 +161,9 @@ class ScoreItPreferencesRepoTest {
         assertTrue(repo.isTotalDisplayed(GameType.UNIVERSAL))
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `isTotalDisplayed lève une erreur pour la belote`() {
-        repo.isTotalDisplayed(GameType.BELOTE)
+        assertThrows<IllegalStateException> { repo.isTotalDisplayed(GameType.BELOTE) }
     }
 
     // --- setTotalDisplayed ---
@@ -173,9 +174,9 @@ class ScoreItPreferencesRepoTest {
         verify { editor.putBoolean("universal_show_total", true) }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `setTotalDisplayed lève une erreur pour le cactus`() {
-        repo.setTotalDisplayed(GameType.CACTUS, true)
+        assertThrows<IllegalStateException> { repo.setTotalDisplayed(GameType.CACTUS, true) }
     }
 
     // --- Theme ---

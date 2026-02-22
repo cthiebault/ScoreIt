@@ -13,10 +13,11 @@ import com.sbgapps.scoreit.data.model.UniversalLap
 import com.sbgapps.scoreit.data.repository.BillingRepo
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class GameViewModelTest {
 
@@ -47,16 +48,16 @@ class GameViewModelTest {
         assertEquals(listOf(2, 3, 4, 5, 6, 7, 8), viewModel.getPlayerCountOptions())
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `options de nombre de joueurs lève une erreur pour la belote`() {
         every { useCase.getGame() } returns BeloteGame(players2)
-        viewModel.getPlayerCountOptions()
+        assertThrows<IllegalStateException> { viewModel.getPlayerCountOptions() }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `options de nombre de joueurs lève une erreur pour la coinche`() {
         every { useCase.getGame() } returns CoincheGame(players2)
-        viewModel.getPlayerCountOptions()
+        assertThrows<IllegalStateException> { viewModel.getPlayerCountOptions() }
     }
 
     // --- getEnabledMenuItems ---

@@ -1,7 +1,7 @@
 package com.sbgapps.scoreit.core.ext
 
-import junit.framework.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ListExtTest {
 

@@ -28,6 +28,10 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
     }
 
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
+    }
+
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
     }
@@ -50,7 +54,8 @@ dependencies {
 
     ksp(libs.moshi.codegen)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.mockk)
 
     coreLibraryDesugaring(libs.desugaring)

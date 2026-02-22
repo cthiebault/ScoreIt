@@ -24,10 +24,11 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class GameUseCaseTest {
 
@@ -150,14 +151,14 @@ class GameUseCaseTest {
         assertEquals(expected, useCase.getDisplayResults(lap))
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `getDisplayResults lève une erreur pour un jeu universel`() {
-        useCase.getDisplayResults(UniversalLap(listOf(10, 20)))
+        assertThrows<IllegalStateException> { useCase.getDisplayResults(UniversalLap(listOf(10, 20))) }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `getDisplayResults lève une erreur pour un jeu cactus`() {
-        useCase.getDisplayResults(CactusLap(listOf(10, 20)))
+        assertThrows<IllegalStateException> { useCase.getDisplayResults(CactusLap(listOf(10, 20))) }
     }
 
     // --- getScores ---
@@ -649,9 +650,9 @@ class GameUseCaseTest {
         assertEquals(1, gameSlot.captured.laps.size)
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `completeEdition lève une erreur sans état d'édition`() {
-        useCase.completeEdition()
+        assertThrows<IllegalStateException> { useCase.completeEdition() }
     }
 
     // --- deleteLap pour d'autres types ---

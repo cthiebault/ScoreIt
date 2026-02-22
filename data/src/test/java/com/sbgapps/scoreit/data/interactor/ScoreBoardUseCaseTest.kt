@@ -5,8 +5,8 @@ import com.sbgapps.scoreit.data.repository.CacheRepo
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ScoreBoardUseCaseTest {
 
